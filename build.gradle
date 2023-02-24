@@ -1,0 +1,78 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.10'
+}
+
+group = 'me.redtea'
+version = '1.0.0.0-ALFA'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc-repo'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+}
+
+dependencies {
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+
+    compileOnly 'com.github.cryptomorin:XSeries:9.2.0' //add to libs
+    compileOnly 'dev.triumphteam:triumph-gui:3.1.2' //impl?
+    compileOnly("me.mattstudios.utils:matt-framework:1.4.6")
+
+    compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8" //add to libs
+    compileOnly 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1' //add to libs
+
+    compileOnly 'org.projectlombok:lombok:1.18.22'
+    annotationProcessor 'org.projectlombok:lombok:1.18.22'
+
+    compileOnly 'com.google.inject:guice:5.1.0' //add to libs
+    compileOnly 'com.google.inject.extensions:guice-assistedinject:5.1.0' //add to libs
+
+    //exposed
+    compileOnly("org.jetbrains.exposed:exposed-core:0.40.1")
+    compileOnly("org.jetbrains.exposed:exposed-dao:0.40.1")
+    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.40.1")
+
+
+}
+
+def targetJavaVersion = 8
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release = targetJavaVersion
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}

@@ -1,0 +1,29 @@
+plugins {
+    id 'java'
+}
+
+group = 'me.redtea.carcadex'
+version = '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'papermc-repo'
+        url = 'https://repo.papermc.io/repository/maven-public/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+}
+
+dependencies {
+    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'com.google.inject:guice:5.1.0' //add to libs
+    compileOnly 'com.google.inject.extensions:guice-assistedinject:5.1.0' //add to libs
+}
+
+tasks.register('wrapper', Wrapper) {
+    gradleVersion = '7.2'
+}
+tasks.register("prepareKotlinBuildScriptModel"){}

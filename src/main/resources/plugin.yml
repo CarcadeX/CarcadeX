@@ -1,0 +1,4 @@
+ame: CarcadeX
+version: '${version}'
+main: me.redtea.carcadex.CarcadeX
+api-version: 1.13
