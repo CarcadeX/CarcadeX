@@ -3,19 +3,22 @@ Powerful library for bukkit development and other...
 
 Messages
 ---------------
+
+<a href="https://docs.advntr.dev/minimessage/format.html">Using MiniMessages format</a>
+
 messages.yml in resource (jar) folder:
-```
-error: "<red>Error!"
+```yaml
+error: "<red>Error!</red>"
 someRoot:
-      message1: "<green>Message"
+      message1: "<green>Message</green>"
       message2:
-          - "<green>Message start!"
-          - "<green>End!"
+          - "<green>Message start!</green>"
+          - "<green>End!</green>"
 ```
  
 Using in plugin:
  
-```
+```java
 @Override
 public void onEnable() {
       Messages messages = Messages.of(this); //Init Messages
@@ -27,9 +30,18 @@ public void onEnable() {
 ```
 
 Ways of getting Message object:
-1. Load messages.yml from jar by default: <pre>Messages messages = Messages.of(this);</pre>
-2. Load custom file from jar by default: <pre>Messages messages = Messages.of(this, "filename.yml");</pre>
-3. Load using ConfigurationSection: <pre>Messages messages = Messages.of(getConfig().getConfigurationSection("messages"));</pre>
+1. Load messages.yml from jar by default: 
+```java
+Messages messages = Messages.of(this);
+```
+2. Load custom file from jar by default:
+```java
+Messages messages = Messages.of(this, "filename.yml");
+```
+3. Load using ConfigurationSection: 
+```java
+Messages messages = Messages.of(getConfig().getConfigurationSection("messages"));
+```
 
 Supporting
 ---------------
@@ -39,7 +51,7 @@ Supporting
 Starting use
 ---------------
 **Gradle:**
-```
+```kotlin
 repositories {
     mavenCentral()
 }
@@ -49,7 +61,7 @@ dependencies {
 }
 ```
 **Maven:**
-```
+```xml
 <dependency>
     <groupId>io.github.iredtea</groupId>
     <artifactId>carcadex</artifactId>
