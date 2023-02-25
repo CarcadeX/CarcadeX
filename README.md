@@ -4,19 +4,18 @@ Powerful library for bukkit development and other...
 Messages
 ---------------
 messages.yml in resource (jar) folder:
-<pre>
-
+```
 error: "<red>Error!"
 someRoot:
       message1: "<green>Message"
       message2:
           - "<green>Message start!"
           - "<green>End!"
- </pre>
+```
  
 Using in plugin:
  
-<pre>
+```
 @Override
 public void onEnable() {
       Messages messages = Messages.of(this); //Init Messages
@@ -25,7 +24,7 @@ public void onEnable() {
       message.get("someRoot.message1").send(sender); //Getting someRoot.message1 message
       message.get("someRoot.message2").send(sender); //Getting someRoot.message2 message
 }
-</pre>
+```
 
 Ways of getting Message object:
 1. Load messages.yml from jar by default: <pre>Messages messages = Messages.of(this);</pre>
@@ -34,13 +33,13 @@ Ways of getting Message object:
 
 Supporting
 ---------------
-<p>**Paper 1.16.x or longer**</p>
-<p>**Java 8 or longer**</p>
+<p>Paper 1.16.x or longer</p>
+<p>Java 8 or longer</p>
 
 Starting use
 ---------------
-Gradle:
-<pre>
+**Gradle:**
+```
 repositories {
     mavenCentral()
 }
@@ -48,12 +47,12 @@ repositories {
 dependencies {
     implementation("io.github.iredtea:carcadex:1.0.0") //or add it to plugin.yml: libs and set compileOnly
 }
-</pre>
-Maven:
-<pre>
+```
+**Maven:**
+```
 <dependency>
     <groupId>io.github.iredtea</groupId>
     <artifactId>carcadex</artifactId>
     <version>1.0.0</version>
 </dependency>
-</pre>
+```
