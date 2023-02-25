@@ -34,5 +34,5 @@ Ways of getting Message object:
 
 Supporting
 ---------------
-**Paper 1.16.x or longer**
-**Java 8 or longer**
+<p>**Paper 1.16.x or longer**</p>
+<p>**Java 8 or longer**</p>
