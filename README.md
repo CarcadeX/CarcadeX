@@ -43,10 +43,17 @@ Gradle:
 <pre>
 repositories {
     mavenCentral()
-
 }
 
 dependencies {
-    implementation 'io.github.iredtea:carcadex:1.0.0'
+    implementation("io.github.iredtea:carcadex:1.0.0") //or add it to plugin.yml: libs and set compileOnly
 }
+</pre>
+Maven:
+<pre>
+<dependency>
+    <groupId>io.github.iredtea</groupId>
+    <artifactId>carcadex</artifactId>
+    <version>1.0.0</version>
+</dependency>
 </pre>
