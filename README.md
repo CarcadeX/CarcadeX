@@ -45,8 +45,8 @@ Messages messages = Messages.of(getConfig().getConfigurationSection("messages"))
 
 Supporting
 ---------------
-<p>Paper 1.16.x or longer</p>
-<p>Java 8 or longer</p>
+<p>Paper 1.16.x or higher</p>
+<p>Java 8 or higher</p>
 
 Starting use
 ---------------
