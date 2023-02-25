@@ -36,3 +36,17 @@ Supporting
 ---------------
 <p>**Paper 1.16.x or longer**</p>
 <p>**Java 8 or longer**</p>
+
+Starting use
+---------------
+Gradle:
+<pre>
+repositories {
+    mavenCentral()
+
+}
+
+dependencies {
+    implementation 'io.github.iredtea:carcadex:1.0.0'
+}
+</pre>
