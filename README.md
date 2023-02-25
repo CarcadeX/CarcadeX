@@ -19,11 +19,11 @@ Using in plugin:
 <pre>
 @Override
 public void onEnable() {
-    Messages messages = Messages.of(this); //Init Messages
-    CommandSender sender = ...; //Getting CommandSender
-    messages.get("error").send(sender); //Getting error message
-    message.get("someRoot.message1").send(sender); //Getting someRoot.message1 message
-    message.get("someRoot.message2").send(sender); //Getting someRoot.message2 message
+      Messages messages = Messages.of(this); //Init Messages
+      CommandSender sender = ...; //Getting CommandSender
+      messages.get("error").send(sender); //Getting error message
+      message.get("someRoot.message1").send(sender); //Getting someRoot.message1 message
+      message.get("someRoot.message2").send(sender); //Getting someRoot.message2 message
 }
 </pre>
 
