@@ -3,7 +3,6 @@ package me.redtea.carcadex.message.model;
 import com.cryptomorin.xseries.XMaterial;
 import me.redtea.carcadex.message.model.impl.ComponentMessage;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;

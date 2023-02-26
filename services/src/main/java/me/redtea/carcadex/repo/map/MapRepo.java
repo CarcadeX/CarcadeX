@@ -1,4 +1,6 @@
-package me.redtea.carcadex.repo;
+package me.redtea.carcadex.repo.map;
+
+import me.redtea.carcadex.repo.Repo;
 
 import java.util.Collection;
 import java.util.HashMap;

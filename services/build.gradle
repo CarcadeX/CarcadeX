@@ -1,8 +1,9 @@
 plugins {
     id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
 }
 
-group = 'me.redtea.carcadex'
+group = "io.github.iRedTea"
 version = '1.0.0'
 
 repositories {
@@ -18,12 +19,23 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1' //add to libs
+
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'com.google.inject:guice:5.1.0' //add to libs
     compileOnly 'com.google.inject.extensions:guice-assistedinject:5.1.0' //add to libs
+    compileOnly("org.projectlombok:lombok:1.18.22")
+    annotationProcessor("org.projectlombok:lombok:1.18.22")
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
 }
 
 tasks.register('wrapper', Wrapper) {
     gradleVersion = '7.2'
 }
 tasks.register("prepareKotlinBuildScriptModel"){}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}

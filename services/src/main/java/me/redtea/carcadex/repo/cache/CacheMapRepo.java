@@ -1,6 +1,6 @@
 package me.redtea.carcadex.repo.cache;
 
-import me.redtea.carcadex.repo.MapRepo;
+import me.redtea.carcadex.repo.map.MapRepo;
 import me.redtea.carcadex.schema.SchemaStrategy;
 
 import java.util.*;
@@ -14,8 +14,8 @@ public abstract class CacheMapRepo<K, V> extends MapRepo<K, V> implements CacheR
         this.schemaStrategy = schemaStrategy;
     }
 
-
-    protected V update(K key, V value) {
+    @Override
+    public V update(K key, V value) {
         return data.put(key, value);
     }
 
@@ -45,7 +45,7 @@ public abstract class CacheMapRepo<K, V> extends MapRepo<K, V> implements CacheR
     @Override
     public void saveAll() {
         toRemove.forEach(schemaStrategy::remove);
-        data.values().forEach(schemaStrategy::insert);
+        data.forEach(schemaStrategy::insert);
     }
 
     @Override

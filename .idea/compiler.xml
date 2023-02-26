@@ -9,6 +9,7 @@
         </processorPath>
         <module name="CarcadeX.kotlin.main" />
         <module name="CarcadeX.main" />
+        <module name="CarcadeX.services.main" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="1.8" />

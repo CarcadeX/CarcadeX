@@ -2,3 +2,5 @@ rootProject.name = 'CarcadeX'
 include 'kotlin'
 include 'services'
 include 'messages'
+include 'test'
+

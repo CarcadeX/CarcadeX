@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'me.redtea.carcadex'
+group = "io.github.iRedTea"
 version = '1.0.0'
 
 repositories {
@@ -20,6 +20,7 @@ repositories {
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'com.github.cryptomorin:XSeries:9.2.0' //add to libs
+    compileOnly "net.kyori:adventure-text-minimessage:4.12.0"
 }
 
 tasks.register('wrapper', Wrapper) {
@@ -27,3 +28,9 @@ tasks.register('wrapper', Wrapper) {
 }
 
 tasks.register("prepareKotlinBuildScriptModel"){}
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}

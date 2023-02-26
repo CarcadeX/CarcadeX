@@ -9,7 +9,7 @@ public interface SchemaStrategy<K, V> extends Reloadable {
 
     V get(K key);
 
-    void insert(V value);
+    void insert(K key, V value);
 
     void remove(K key);
 }
