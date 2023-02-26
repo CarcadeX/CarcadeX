@@ -1,14 +1,14 @@
-package me.redtea.carcadex.repo.cache.decorator;
+package me.redtea.carcadex.repo.decorator;
 
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import me.redtea.carcadex.repo.cache.CacheRepo;
+import me.redtea.carcadex.repo.impl.CacheRepo;
 
 import java.util.Collection;
 import java.util.Optional;
 
 @RequiredArgsConstructor(access = AccessLevel.PROTECTED)
-public class CacheRepoDecorator<K, V> implements CacheRepo<K, V> {
+public abstract class CacheRepoDecorator<K, V> implements CacheRepo<K, V> {
     protected final CacheRepo<K, V> repo;
 
     @Override

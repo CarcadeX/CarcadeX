@@ -1,7 +1,7 @@
-package me.redtea.carcadex.repo.yaml;
+package me.redtea.carcadex.repo.impl.yaml;
 
-import me.redtea.carcadex.repo.map.MapRepo;
-import me.redtea.carcadex.repo.yaml.strategy.ParseStrategy;
+import me.redtea.carcadex.repo.impl.map.MapRepo;
+import me.redtea.carcadex.repo.impl.yaml.strategy.ParseStrategy;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;

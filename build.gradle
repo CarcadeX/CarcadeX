@@ -8,7 +8,7 @@ plugins {
 
 group = "io.github.iredtea"
 archivesBaseName = "carcadex"
-def versionGlobal = "1.0.2"
+def versionGlobal = project.findProperty('version')
 version = versionGlobal
 
 repositories {

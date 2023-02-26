@@ -1,4 +1,4 @@
-package me.redtea.carcadex.common;
+package me.redtea.carcadex.serializer;
 
 public interface CommonSerializer<T> {
     String serialize(T t);

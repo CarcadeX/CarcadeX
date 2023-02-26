@@ -1,4 +1,4 @@
-package me.redtea.carcadex.repo.map;
+package me.redtea.carcadex.repo.impl.map;
 
 import me.redtea.carcadex.repo.Repo;
 

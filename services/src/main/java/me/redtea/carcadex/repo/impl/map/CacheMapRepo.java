@@ -1,6 +1,6 @@
-package me.redtea.carcadex.repo.cache;
+package me.redtea.carcadex.repo.impl.map;
 
-import me.redtea.carcadex.repo.map.MapRepo;
+import me.redtea.carcadex.repo.impl.CacheRepo;
 import me.redtea.carcadex.schema.SchemaStrategy;
 
 import java.util.*;

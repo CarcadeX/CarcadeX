@@ -1,7 +1,7 @@
-package me.redtea.carcadex.repo.cache.decorator.impl;
+package me.redtea.carcadex.repo.decorator.impl;
 
-import me.redtea.carcadex.repo.cache.CacheRepo;
-import me.redtea.carcadex.repo.cache.decorator.CacheRepoDecorator;
+import me.redtea.carcadex.repo.impl.CacheRepo;
+import me.redtea.carcadex.repo.decorator.CacheRepoDecorator;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.Plugin;
 

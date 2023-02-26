@@ -3,4 +3,5 @@ include 'kotlin'
 include 'services'
 include 'messages'
 include 'test'
+include 'test'
 

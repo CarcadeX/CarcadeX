@@ -1,7 +1,7 @@
-package me.redtea.carcadex.schema.impl;
+package me.redtea.carcadex.schema.impl.serialize;
 
-import me.redtea.carcadex.schema.SchemaStrategy;
-import me.redtea.carcadex.common.CommonSerializer;
+import me.redtea.carcadex.serializer.CommonSerializer;
+import me.redtea.carcadex.schema.AbstractFileSchemaStrategy;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -10,27 +10,15 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-public class CommonSchemaStrategy<K, V> implements SchemaStrategy<K, V> {
-    private final Path dir;
+public class SerializeSchemaStrategy<K, V> extends AbstractFileSchemaStrategy<K, V> {
 
     private final CommonSerializer<V> serializer;
 
-    public CommonSchemaStrategy(Path dir, CommonSerializer<V> serializer) {
-        this.dir = dir;
+    public SerializeSchemaStrategy(Path dir, CommonSerializer<V> serializer) {
+        super(dir);
         this.serializer = serializer;
-        init();
     }
 
-    @Override
-    public void init() {
-        if(Files.notExists(dir)) {
-            try {
-                Files.createDirectory(dir);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
 
     @Override
     public void close() {
@@ -53,7 +41,7 @@ public class CommonSchemaStrategy<K, V> implements SchemaStrategy<K, V> {
     public V get(K key) {
         try {
             return serializer.deserialize(
-                    String.join("", Files.readAllLines(
+                    String.join("\n", Files.readAllLines(
                             Arrays.stream(dir.toFile().listFiles()).filter(it -> it.getName().equals(String.valueOf(key)))
                                     .findFirst().get().toPath()
                             )));
@@ -65,7 +53,6 @@ public class CommonSchemaStrategy<K, V> implements SchemaStrategy<K, V> {
     @Override
     public void insert(K key, V value) {
         File file = new File(dir.toFile(), String.valueOf(key));
-
         try {
             if(!file.exists()) file.createNewFile();
             BufferedWriter writer;
@@ -77,9 +64,4 @@ public class CommonSchemaStrategy<K, V> implements SchemaStrategy<K, V> {
         }
     }
 
-    @Override
-    public void remove(K key) {
-        File file = new File(dir.toFile(), String.valueOf(key));
-        if(file.exists()) file.delete();
-    }
 }

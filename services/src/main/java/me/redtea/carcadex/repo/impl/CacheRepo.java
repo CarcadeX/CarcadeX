@@ -1,4 +1,4 @@
-package me.redtea.carcadex.repo.cache;
+package me.redtea.carcadex.repo.impl;
 
 import me.redtea.carcadex.repo.MutableRepo;
 
