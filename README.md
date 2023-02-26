@@ -159,9 +159,7 @@ public void onEnable() {
 
 
 //D) implementation (the folder name "saved-data-carcadex" will be used in root folder)
-Repo.builder()
-        .serializer(new PurchaseSerializer())
-        .build();
+Repo.builder().serializer(new PurchaseSerializer()).build();
 ```
 
 Supporting
