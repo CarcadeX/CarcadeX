@@ -43,6 +43,127 @@ Messages messages = Messages.of(this, "filename.yml");
 Messages messages = Messages.of(getConfig().getConfigurationSection("messages"));
 ```
 
+Repo
+---------------
+<p>You can use Repo.<K, V>builder() to create the repository you need.<p>
+<h3>Binary repository</h3>
+<p>This repository requires the least effort to initialize it.<p>
+<p>You need only class, that implements Serializable and contains fields that types are primitive or implements Serializable</p>
+<p>For example:</p>
+
+```java
+@Data
+class User implements Serializable {
+    private static final long serialVersionUID = 6529685098267757690L;
+    private final String name;
+    private int age;
+    private List<String> children;
+}
+```
+
+<p>Usage of builder:</p>
+
+```java
+MutableRepo<String, User> repo = Repo.<String, User> builder()
+        .dir(Paths.get("data")
+        .binary()
+        .build();
+```
+
+<p>Warning! This method can be quite unstable! It is not recommended to use :(</p>
+<p>Also it is recommended to set the serialID to the class as it was done in the example:</p>
+
+```java
+private static final long serialVersionUID = 6529685098267757690L;
+```
+
+<h3>Serializator repository</h3>
+<p>To use this type of repository, you must create your own implementation of CommonSerializer<T>.</p>
+<p>For example:</p>
+
+```java
+public record Purchase(int idOnForum,
+                       String command,
+                       String[] allowedServers,
+                       String[] allowedWorlds,
+                       XMaterial icon) {}
+                     
+public class PurchaseSerializer implements CommonSerializer<Purchase> {
+    @Override
+    public String serialize(Purchase purchase) {
+        return purchase.idOnForum() +
+                "\n" +
+                purchase.command() +
+                "\n" +
+                String.join(",", purchase.allowedServers()) +
+                "\n" +
+                String.join(",", purchase.allowedWorlds()) +
+                "\n" +
+                purchase.icon().parseMaterial().name();
+    }
+
+    @Override
+    public Purchase deserialize(String s) {
+        String[] args = s.split("\n");
+        return new Purchase(
+                Integer.parseInt(args[0]),
+                args[1],
+                args[2].split(","),
+                args[3].split(","),
+                XMaterial.valueOf(args[4])
+        );
+    }
+}
+```
+
+
+<p>Now you can create repo using builder:</p>
+
+```java
+MutableRepo<String, User> repo = Repo.<String, User> builder()
+        .dir(Paths.get("data")
+        .serializer(new PurchaseSerializer())
+        .build();
+```
+
+<h3>Customizing builder</h3>
+<p>In addition to directly installing the repository folder, you can:<p>
+
+```java
+//A) Set name of dir (the path to it is the root folder of the program)
+Repo.builder()
+        .dir("data-dir")
+        .serializer(new PurchaseSerializer())
+        .build();
+
+
+//B) Set bukkit plugin and name of dir (the path to it is the folder of your bukkit plugin)
+@Override
+public void onEnable() {
+    Repo.builder()
+            .dir("data-dir")
+            .plugin(this)
+            .serializer(new PurchaseSerializer())
+            .build();
+}
+
+
+//C) Set only plugin (the folder name "saved-data-carcadex" will be used in plugin folder)
+@Override
+public void onEnable() {
+    Repo.builder()
+            .plugin(this)
+            .serializer(new PurchaseSerializer())
+            .build();
+}
+
+
+//D) implementation (the folder name "saved-data-carcadex" will be used in root folder)
+Repo.builder()
+        .serializer(new PurchaseSerializer())
+        .build();
+```
+
 Supporting
 ---------------
 <p>Paper 1.16.x or higher</p>
@@ -57,7 +178,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.iredtea:carcadex:1.0.1") //or add it to plugin.yml: libs and set compileOnly
+    implementation("io.github.iredtea:carcadex:1.0.3") //or add it to plugin.yml: libs and set compileOnly
 }
 ```
 **Maven:**
@@ -65,6 +186,6 @@ dependencies {
 <dependency>
     <groupId>io.github.iredtea</groupId>
     <artifactId>carcadex</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.3</version>
 </dependency>
 ```
