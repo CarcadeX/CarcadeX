@@ -40,7 +40,7 @@ public class CommonSchemaStrategy<K, V> implements SchemaStrategy<K, V> {
     public Collection<V> all() {
         return Arrays.stream(dir.toFile().listFiles()).map(file -> {
             try {
-                return serializer.deserialize(String.join("", Files.readAllLines(file.toPath())));
+                return serializer.deserialize(String.join("\n", Files.readAllLines(file.toPath())));
             } catch (FileNotFoundException e) {
                 throw new RuntimeException(e);
             } catch (IOException e) {

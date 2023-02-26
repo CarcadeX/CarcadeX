@@ -7,7 +7,9 @@ plugins {
 }
 
 group = "io.github.iredtea"
-version = "1.0.0"
+archivesBaseName = "carcadex"
+def versionGlobal = "1.0.2"
+version = versionGlobal
 
 repositories {
     mavenCentral()
@@ -24,6 +26,26 @@ repositories {
 dependencies {
     compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
 
+    /*
+    compileOnly("com.github.cryptomorin:XSeries:9.2.0") //add to libs
+    compileOnly("dev.triumphteam:triumph-gui:3.1.2") //impl?
+    compileOnly("me.mattstudios.utils:matt-framework:1.4.6")
+
+    compileOnly(kotlin("stdlib", KotlinCompilerVersion.VERSION)) //add to libs
+    compileOnly("org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1") //add to libs
+
+    compileOnly("org.projectlombok:lombok:1.18.22")
+    annotationProcessor("org.projectlombok:lombok:1.18.22")
+
+    compileOnly("com.google.inject:guice:5.1.0") //add to libs
+    compileOnly("com.google.inject.extensions:guice-assistedinject:5.1.0") //add to libs
+
+    //exposed
+    compileOnly("org.jetbrains.exposed:exposed-core:0.40.1")
+    compileOnly("org.jetbrains.exposed:exposed-dao:0.40.1")
+    compileOnly("org.jetbrains.exposed:exposed-jdbc:0.40.1")
+
+     */
     compileOnly("org.projectlombok:lombok:1.18.22")
     annotationProcessor("org.projectlombok:lombok:1.18.22")
 
@@ -44,7 +66,7 @@ publishing {
         mavenJava(MavenPublication) {
             artifactId = 'carcadex'
             groupId = 'io.github.iredtea'
-            version = '1.0.0'
+            version = versionGlobal
             from components.java
             versionMapping {
                 usage('java-api') {
@@ -57,7 +79,7 @@ publishing {
             pom {
                 artifactId = "carcadex"
                 groupId = "io.github.iredtea"
-                version = "1.0.0"
+                version = version
                 name = 'carcadex'
                 description = 'carcadex'
                 url = 'https://github.com/iRedTea/CarcadeX'
@@ -94,7 +116,7 @@ publishing {
             url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
             credentials {
                 username = "itzRedTea"
-                password = "secret"
+                password = project.findProperty('password')
             }
         }
 
@@ -108,7 +130,7 @@ nexusStaging {
     serverUrl = "https://s01.oss.sonatype.org/service/local/"
     packageGroup = "io.github.iredtea"
     username = "itzRedTea"
-    password = "secret"
+    password = project.findProperty('password')
 
 }
 
@@ -130,7 +152,7 @@ artifacts {
 }
 
 shadowJar {
-    archiveBaseName.set('carcadex-' + version)
+    archiveBaseName.set('carcadex-' + versionGlobal)
     archiveClassifier.set('')
     archiveVersion.set('')
 }
