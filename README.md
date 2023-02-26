@@ -10,7 +10,7 @@ messages.yml in resource (jar) folder:
 ```yaml
 error: "<red>Error!</red>"
 someRoot:
-  message1: "<green>Message</green>"
+  message1: "<green>Hi, %name%!</green>"
   message2:
     - "<green>Message start!</green>"
     - "<green>End!</green>"
@@ -24,7 +24,7 @@ public void onEnable() {
       Messages messages = Messages.of(this); //Init Messages
       CommandSender sender = ...; //Getting CommandSender
       messages.get("error").send(sender); //Getting error message
-      messages.get("someRoot.message1").send(sender); //Getting someRoot.message1 message
+      messages.get("someRoot.message1").replaceAll("%name%", sender.getName()).send(sender); //Getting someRoot.message1 message
       messages.get("someRoot.message2").send(sender); //Getting someRoot.message2 message
 }
 ```
