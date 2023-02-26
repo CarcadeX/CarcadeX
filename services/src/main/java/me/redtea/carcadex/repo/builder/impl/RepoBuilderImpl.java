@@ -52,8 +52,8 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
     }
 
     @Override
-    public RepoBuilder<K, V> filename(String filename) {
-        this.filename = "saved-data-carcadex";
+    public RepoBuilder<K, V> dir(String filename) {
+        this.filename = filename;
         return this;
     }
 

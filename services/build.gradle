@@ -1,6 +1,5 @@
 plugins {
     id 'java'
-    id 'org.jetbrains.kotlin.jvm' version '1.8.0'
 }
 
 group = "io.github.iRedTea"
@@ -26,7 +25,7 @@ dependencies {
     compileOnly 'com.google.inject.extensions:guice-assistedinject:5.1.0' //add to libs
     compileOnly("org.projectlombok:lombok:1.18.22")
     annotationProcessor("org.projectlombok:lombok:1.18.22")
-    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+ //   implementation "org.jetbrains.kotlin:kotlin-stdlib"
 }
 
 tasks.register('wrapper', Wrapper) {

@@ -13,7 +13,7 @@ public interface RepoBuilder<K, V> {
     RepoBuilder<K, V> plugin(Plugin plugin);
     RepoBuilder<K, V> autoSave(int period); //requires Plugin
     RepoBuilder<K, V> dir(Path dir);
-    RepoBuilder<K, V> filename(String filename); //requires plugin. didnt need if dir set
+    RepoBuilder<K, V> dir(String filename); //requires plugin. didnt need if dir set
     MutableRepo<K, V> build();
 
     static<K, V> RepoBuilder<K, V> get() {
