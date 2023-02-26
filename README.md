@@ -10,10 +10,10 @@ messages.yml in resource (jar) folder:
 ```yaml
 error: "<red>Error!</red>"
 someRoot:
-      message1: "<green>Message</green>"
-      message2:
-          - "<green>Message start!</green>"
-          - "<green>End!</green>"
+  message1: "<green>Message</green>"
+  message2:
+    - "<green>Message start!</green>"
+    - "<green>End!</green>"
 ```
  
 Using in plugin:
