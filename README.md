@@ -71,7 +71,7 @@ MutableRepo<String, User> repo = Repo.<String, User> builder()
 ```
 
 <p>Warning! This method can be quite unstable! It is not recommended to use :(</p>
-<p>Also it is recommended to set the serialID to the class as it was done in the example:</p>
+<p>Also it is recommended to set the serialVersionUID to the class as it was done in the example:</p>
 
 ```java
 private static final long serialVersionUID = 6529685098267757690L;
@@ -159,9 +159,7 @@ public void onEnable() {
 
 
 //D) implementation (the folder name "saved-data-carcadex" will be used in root folder)
-Repo.builder()
-        .serializer(new PurchaseSerializer())
-        .build();
+Repo.builder().serializer(new PurchaseSerializer()).build();
 ```
 
 Supporting
