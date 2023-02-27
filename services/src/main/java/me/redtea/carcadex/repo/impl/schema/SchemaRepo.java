@@ -1,16 +1,17 @@
-package me.redtea.carcadex.repo.impl.map;
+package me.redtea.carcadex.repo.impl.schema;
 
 import me.redtea.carcadex.repo.impl.CacheRepo;
+import me.redtea.carcadex.repo.impl.map.MapRepo;
 import me.redtea.carcadex.schema.SchemaStrategy;
 
 import java.util.*;
 
-public abstract class CacheMapRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
+public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
     protected final Set<K> toRemove = new HashSet<>();
 
     protected final SchemaStrategy<K, V> schemaStrategy;
 
-    protected CacheMapRepo(SchemaStrategy<K, V> schemaStrategy) {
+    public SchemaRepo(SchemaStrategy<K, V> schemaStrategy) {
         this.schemaStrategy = schemaStrategy;
     }
 
@@ -56,6 +57,11 @@ public abstract class CacheMapRepo<K, V> extends MapRepo<K, V> implements CacheR
     @Override
     public void removeFromCache(K key) {
         data.remove(key);
+    }
+
+    @Override
+    public void init() {
+        schemaStrategy.init();
     }
 
     @Override

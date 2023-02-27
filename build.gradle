@@ -50,9 +50,9 @@ dependencies {
     annotationProcessor("org.projectlombok:lombok:1.18.22")
 
 
-    implementation project(":messages")
-    implementation project(":kotlin")
-    implementation project(":services")
+    compileOnly project(":messages")
+    compileOnly project(":kotlin")
+    compileOnly project(":services")
 }
 
 

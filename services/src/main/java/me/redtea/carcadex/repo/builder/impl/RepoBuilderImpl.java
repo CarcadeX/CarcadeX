@@ -1,5 +1,7 @@
 package me.redtea.carcadex.repo.builder.impl;
 
+import me.redtea.carcadex.repo.impl.schema.SchemaRepo;
+import me.redtea.carcadex.schema.SchemaStrategy;
 import me.redtea.carcadex.serializer.CommonSerializer;
 import me.redtea.carcadex.repo.MutableRepo;
 import me.redtea.carcadex.repo.builder.RepoBuilder;
@@ -19,6 +21,7 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
     private Plugin plugin;
     private Path dir;
     private String filename;
+    private SchemaStrategy<K, V> schemaStrategy;
 
     @Override
     public RepoBuilder<K, V> serializer(CommonSerializer<V> serializer) {
@@ -46,6 +49,12 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
     }
 
     @Override
+    public RepoBuilder<K, V> schema(SchemaStrategy<K, V> schemaStrategy) {
+        this.schemaStrategy = schemaStrategy;
+        return this;
+    }
+
+    @Override
     public RepoBuilder<K, V> dir(Path path) {
         this.dir = path;
         return this;
@@ -63,7 +72,10 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
             checkDir();
         }
         CacheRepo<K, V> result;
-        if(serializer == null) result = new CommonRepoDecorator<>(dir);
+        if(serializer == null) {
+            if(schemaStrategy != null) result = new SchemaRepo<>(schemaStrategy);
+            else result = new CommonRepoDecorator<>(dir);
+        }
         else result = new CommonRepoDecorator<>(dir, serializer);
         if(autoSave) {
             if(plugin == null) throw new NullPointerException("Plugin is null! Please set it.");
