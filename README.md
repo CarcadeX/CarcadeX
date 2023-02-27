@@ -161,7 +161,15 @@ public void onEnable() {
 //D) implementation (the folder name "saved-data-carcadex" will be used in root folder)
 Repo.builder().serializer(new PurchaseSerializer()).build();
 ```
-
+  
+<p>Also you can set repo autoupdate (it requires to set plugin):</p>
+```java
+Repo.builder()
+          .plugin(this)
+          .autoupdate(20*60*60*10) //in ticks
+          .serializer(new PurchaseSerializer())
+          .build();
+```
 Supporting
 ---------------
 <p>Paper 1.16.x or higher</p>
@@ -176,7 +184,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.iredtea:carcadex:1.0.3") //or add it to plugin.yml: libs and set compileOnly
+    implementation("io.github.iredtea:carcadex:1.0.4") //or add it to plugin.yml: libs and set compileOnly
 }
 ```
 **Maven:**
@@ -184,6 +192,6 @@ dependencies {
 <dependency>
     <groupId>io.github.iredtea</groupId>
     <artifactId>carcadex</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
