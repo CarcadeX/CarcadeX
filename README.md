@@ -125,7 +125,9 @@ MutableRepo<String, User> repo = Repo.<String, User> builder()
         .serializer(new PurchaseSerializer())
         .build();
 ```
+
 <h3>Schema repo</h3>
+
 ```java
 //using mysql class from https://github.com/Huskehhh/MySQL
 @Data
@@ -200,13 +202,16 @@ class UserSchema implements SchemaStrategy<Integer, User> {
     }
 }
 ```
+
 <p>Creating repo:</p>
+
 ```java
 MySQL mysql = ...;
 Repo.<Integer, User> builder().
                 .schema(new UserSchema(mysql))
                 .build();
 ```
+
 <h3>Customizing builder</h3>
 <p>In addition to directly installing the repository folder, you can:<p>
 
