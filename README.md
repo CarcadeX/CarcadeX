@@ -249,6 +249,7 @@ Repo.builder().serializer(new PurchaseSerializer()).build();
 ```
   
 <p>Also you can set repo autoupdate (it requires to set plugin):</p>
+
 ```java
 Repo.builder()
           .plugin(this)
@@ -256,6 +257,7 @@ Repo.builder()
           .serializer(new PurchaseSerializer())
           .build();
 ```
+
 Supporting
 ---------------
 <p>Paper 1.16.x or higher</p>
