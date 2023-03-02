@@ -126,6 +126,92 @@ MutableRepo<String, User> repo = Repo.<String, User> builder()
         .build();
 ```
 
+<h3>Schema repo</h3>
+
+```java
+//using mysql class from https://github.com/Huskehhh/MySQL
+@Data
+class User {
+    private final int id;
+    private final String name;
+    private int age;
+}
+
+@RequiredArgsConstructor
+class UserSchema implements SchemaStrategy<Integer, User> {
+    private final MySQL mysql;
+
+    @Override
+    public void init() {
+        mysql.query("CREATE TABLE IF NOT EXISTS table (" +
+                "id INT AUTO_INCREMENT PRIMARY KEY," +
+                "name VARCHAR(25) NOT NULL," +
+                "age INT NOT NULL" +
+                ");");
+    }
+
+    @Override
+    public void close() {
+        mySQL.closeConnection();
+    }
+
+    @Override
+    public Collection<User> all() {
+        List<User> result = new ArrayList<>();
+        mysql.query("SELECT * from table;",results->{
+            if(results != null)
+            while(results.next()){
+                result.add(new User(
+                        results.getInt("id"),
+                        results.getString("name"),
+                        results.getInt("age")
+                ));
+            }
+        });
+        return result;
+    }
+
+    @Override
+    public User get(Integer key) {
+        mysql.query("SELECT * from table WHERE id = "+key+";",results->{
+            if(results != null)
+                if(results.next()){
+                    return new User(
+                            results.getInt("id"),
+                            results.getString("name"),
+                            results.getInt("age")
+                    );
+                }
+        });
+        throw new RuntimeException("not found");
+    }
+
+    @Override
+    public void insert(Integer key, User value) {
+        mysql.update("INSERT INTO `table` (`id`, `name`, `age`) VALUES ('"+key+"','"+
+                value.getName()
+                +"',"+
+                value.getAge()
+                +");");
+
+    }
+
+    @Override
+    public void remove(Integer key) {
+        mysql.query("DELETE FROM table WHERE id =" + key + ";");
+    }
+}
+```
+
+<p>Creating repo:</p>
+
+```java
+MySQL mysql = ...;
+Repo.<Integer, User> builder().
+                .schema(new UserSchema(mysql))
+                .build();
+```
+
 <h3>Customizing builder</h3>
 <p>In addition to directly installing the repository folder, you can:<p>
 
@@ -161,6 +247,16 @@ public void onEnable() {
 //D) implementation (the folder name "saved-data-carcadex" will be used in root folder)
 Repo.builder().serializer(new PurchaseSerializer()).build();
 ```
+  
+<p>Also you can set repo autoupdate (it requires to set plugin):</p>
+
+```java
+Repo.builder()
+          .plugin(this)
+          .autoupdate(20*60*60*10) //in ticks
+          .serializer(new PurchaseSerializer())
+          .build();
+```
 
 Supporting
 ---------------
@@ -176,7 +272,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.iredtea:carcadex:1.0.3") //or add it to plugin.yml: libs and set compileOnly
+    implementation("io.github.iredtea:carcadex:1.0.4") //or add it to plugin.yml: libs and set compileOnly
 }
 ```
 **Maven:**
@@ -184,6 +280,6 @@ dependencies {
 <dependency>
     <groupId>io.github.iredtea</groupId>
     <artifactId>carcadex</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4</version>
 </dependency>
 ```
