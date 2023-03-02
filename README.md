@@ -127,6 +127,7 @@ MutableRepo<String, User> repo = Repo.<String, User> builder()
 ```
 
 <h3>Schema repo</h3>
+<p>If you need a complete customization of the process of saving to memory (for example, if you want to use a database), then you can create a class that implements SchemaStrategy and use the builder from the example.</p>
 
 ```java
 //using mysql class from https://github.com/Huskehhh/MySQL
@@ -248,12 +249,33 @@ public void onEnable() {
 Repo.builder().serializer(new PurchaseSerializer()).build();
 ```
   
-<p>Also you can set repo autoupdate (it requires to set plugin):</p>
+<p>You can set repo autoupdate:</p>
 
 ```java
 Repo.builder()
-          .plugin(this)
-          .autoupdate(20*60*60*10) //in ticks
+          .autoupdate(1000*60*60*10) //in miliseconds
+          .serializer(new PurchaseSerializer())
+          .build();
+```
+
+<p>You can set repo as threadSafe:</p>
+
+```java
+Repo.builder()
+          .threadSafe()
+          .serializer(new PurchaseSerializer())
+          .build();
+```
+
+<p>You can set logger for repo:</p>
+
+```java
+Repo.builder()
+          .logging() //Default slf4j logger
+          /* .logging(org.slf4j.Logger) other logger */
+          /* .debugLogging(org.slf4j.Logger) only on debug enable logger
+             or else .debugLogging() using default slf4j logger
+          */
           .serializer(new PurchaseSerializer())
           .build();
 ```
@@ -272,7 +294,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.iredtea:carcadex:1.0.4") //or add it to plugin.yml: libs and set compileOnly
+    implementation("io.github.iredtea:carcadex:1.0.5") //or add it to plugin.yml: libs and set compileOnly
 }
 ```
 **Maven:**
@@ -280,6 +302,6 @@ dependencies {
 <dependency>
     <groupId>io.github.iredtea</groupId>
     <artifactId>carcadex</artifactId>
-    <version>1.0.4</version>
+    <version>1.0.5</version>
 </dependency>
 ```
