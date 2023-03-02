@@ -272,8 +272,8 @@ Repo.builder()
 ```java
 Repo.builder()
           .logging() //Default slf4j logger
-          /* .logging(org.slf4j.Logger) other logger */
-          /* .debugLogging(org.slf4j.Logger) only on debug enable logger
+          /* .logging(org.slf4j.Logger) other logger
+             .debugLogging(org.slf4j.Logger) only on debug enable logger
              or else .debugLogging() using default slf4j logger
           */
           .serializer(new PurchaseSerializer())
