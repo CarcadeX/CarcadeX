@@ -73,4 +73,12 @@ public interface Message extends ComponentLike {
     default String asUnparsedString() {
         return asUnparsedString("\n");
     }
+
+    /**
+     * @see Message#replaceAll(String, String)
+     */
+    @NotNull
+    default Message replaceAll(@NotNull Object from, @NotNull Object to) {
+        return replaceAll(String.valueOf(from), String.valueOf(to));
+    }
 }

@@ -1,13 +1,19 @@
 package me.redtea.carcadex.repo.decorator.impl;
 
-import me.redtea.carcadex.repo.impl.CacheRepo;
 import me.redtea.carcadex.repo.decorator.CacheRepoDecorator;
-import org.bukkit.Bukkit;
-import org.bukkit.plugin.Plugin;
+import me.redtea.carcadex.repo.impl.CacheRepo;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class AutoSaveDecorator<K, V> extends CacheRepoDecorator<K, V> {
-    public AutoSaveDecorator(CacheRepo<K, V> repo, Plugin plugin, long delay /*in ticks*/, long period /*in ticks*/) {
+    public AutoSaveDecorator(CacheRepo<K, V> repo, long delay /*in milisec*/, long period /*in milisec*/) {
         super(repo);
-        Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, this::saveAll, delay, period);
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                saveAll();
+            }
+        }, delay, period);
     }
 }
