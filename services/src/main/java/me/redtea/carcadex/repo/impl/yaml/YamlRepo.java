@@ -14,9 +14,9 @@ public class YamlRepo<K, V> extends MapRepo<K, V> {
 
     protected final Plugin plugin;
 
-    protected final ParseStrategy parseStrategy;
+    protected final ParseStrategy<K, V> parseStrategy;
 
-    public YamlRepo(Path file, Plugin plugin, ParseStrategy parseStrategy) {
+    public YamlRepo(Path file, Plugin plugin, ParseStrategy<K, V> parseStrategy) {
         this.file = file;
         this.plugin = plugin;
         this.parseStrategy = parseStrategy;
@@ -32,6 +32,6 @@ public class YamlRepo<K, V> extends MapRepo<K, V> {
 
     @Override
     public void init() {
-        parseStrategy.fromYaml(initFile());
+        data.putAll(parseStrategy.fromYaml(initFile()));
     }
 }

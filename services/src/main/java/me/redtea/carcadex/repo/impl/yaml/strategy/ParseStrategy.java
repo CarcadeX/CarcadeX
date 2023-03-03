@@ -2,7 +2,8 @@ package me.redtea.carcadex.repo.impl.yaml.strategy;
 
 import org.bukkit.configuration.file.FileConfiguration;
 
-public interface ParseStrategy {
-    void fromYaml(FileConfiguration fileConfiguration);
+import java.util.Map;
 
+public interface ParseStrategy<K, V> {
+    Map<K, V> fromYaml(FileConfiguration fileConfiguration);
 }
