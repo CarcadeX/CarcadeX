@@ -302,6 +302,6 @@ dependencies {
 <dependency>
     <groupId>io.github.iredtea</groupId>
     <artifactId>carcadex</artifactId>
-    <version>1.0.6</version>
+    <version>1.0.7</version>
 </dependency>
 ```
