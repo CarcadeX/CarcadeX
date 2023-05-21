@@ -294,7 +294,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.iredtea:carcadex:1.0.6") //or add it to plugin.yml: libraries and set compileOnly
+    implementation("io.github.iredtea:carcadex:1.0.7") //or add it to plugin.yml: libraries and set compileOnly
 }
 ```
 **Maven:**
