@@ -24,6 +24,7 @@ dependencies {
     compileOnly 'com.google.inject:guice:5.1.0' //add to libs
     compileOnly 'com.google.inject.extensions:guice-assistedinject:5.1.0' //add to libs
     compileOnly("org.projectlombok:lombok:1.18.22")
+
     annotationProcessor("org.projectlombok:lombok:1.18.22")
  //   implementation "org.jetbrains.kotlin:kotlin-stdlib"
 }

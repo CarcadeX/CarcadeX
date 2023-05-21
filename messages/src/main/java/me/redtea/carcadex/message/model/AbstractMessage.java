@@ -7,6 +7,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,14 @@ public abstract class AbstractMessage implements Message {
         this.unparsed = unparsed;
     }
 
-    protected abstract void parse();
+    protected abstract Component parse(String unparsed);
+
+    private void parse() {
+        parsed = new ArrayList<>();
+        for(String s : unparsed) {
+            parsed.add(parse(s));
+        }
+    }
 
     @Override
     public void send(@NotNull CommandSender sender) {

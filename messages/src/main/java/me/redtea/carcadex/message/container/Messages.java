@@ -1,6 +1,8 @@
 package me.redtea.carcadex.message.container;
 
 import me.redtea.carcadex.message.container.impl.MessagesImpl;
+import me.redtea.carcadex.message.factory.MessageFactory;
+import me.redtea.carcadex.message.factory.impl.LegacyFactoryImpl;
 import me.redtea.carcadex.message.model.Message;
 import me.redtea.carcadex.message.model.impl.NullMessage;
 import org.bukkit.configuration.ConfigurationSection;
@@ -8,6 +10,7 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
 
 import java.io.File;
+import java.nio.file.Path;
 
 /**
  * <h1>Container of messages</h1>
@@ -114,6 +117,11 @@ public interface Messages {
     void reload(ConfigurationSection section);
 
     /**
+     * <h1>Sets custom message parse factory.</h1>
+     */
+    void factory(MessageFactory messageFactory);
+
+    /**
      * <h1>Create container using configuration section</h1>
      * Create container using messages from configuration section.
      * <pre>
@@ -161,6 +169,66 @@ public interface Messages {
      */
     static Messages of(Plugin plugin) {
         return of(plugin, "messages.yml");
+    }
+
+    /**
+     * <h1>Create container using file</h1>
+     * <pre>
+     * {@code
+     * File file = new File("msg_file.yml");
+     * Messages messages = Messages.of(file);
+     * }
+     * </pre>
+     * @param file - file with messages
+     * @return container with messages
+     */
+    static Messages of(File file) {
+        return of(YamlConfiguration.loadConfiguration(file));
+    }
+
+    /**
+     * <h1>Create container using path</h1>
+     *
+     * @param path - file with messages
+     * @return container with messages
+     * @see Messages#of(File)
+     */
+    static Messages of(Path path) {
+        return of(path.toFile());
+    }
+
+    /**
+     * Only legacy color codes. For versions < 1.18
+     * @return container with messages
+     */
+    @Deprecated
+    static Messages legacy(ConfigurationSection section) {
+        return asLegacy(of(section));
+    }
+
+    /** @see Messages#legacy(ConfigurationSection) */
+    @Deprecated
+    static Messages legacy(Plugin plugin, String fileName) {
+        return asLegacy(of(plugin, fileName));
+    }
+
+    /** @see Messages#legacy(ConfigurationSection) */
+    @Deprecated
+    static Messages legacy(Plugin plugin) {
+        return asLegacy(of(plugin));
+    }
+
+    /** @see Messages#legacy(ConfigurationSection) */
+    @Deprecated
+    static Messages legacy(File file) {
+        return asLegacy(of(file));
+    }
+
+    /** @see Messages#legacy(ConfigurationSection) */
+    @Deprecated
+    static Messages asLegacy(Messages messages) {
+        messages.factory(new LegacyFactoryImpl());
+        return messages;
     }
 
     /**

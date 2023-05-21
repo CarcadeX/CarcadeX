@@ -1,9 +1,9 @@
 package me.redtea.carcadex.message.model.impl;
 
 import me.redtea.carcadex.message.model.AbstractMessage;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class ComponentMessage extends AbstractMessage {
@@ -15,11 +15,7 @@ public class ComponentMessage extends AbstractMessage {
     }
 
     @Override
-    protected void parse() {
-        if(parsed != null) return;
-        parsed = new ArrayList<>();
-        for(String s : unparsed) {
-            parsed.add(mm.deserialize(s));
-        }
+    protected Component parse(String unparsed) {
+        return mm.deserialize(unparsed);
     }
 }

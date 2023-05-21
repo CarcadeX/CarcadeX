@@ -17,11 +17,7 @@ public class SerializedMessage extends AbstractMessage {
     }
 
     @Override
-    protected void parse() {
-        if(parsed != null) return;
-        parsed = new ArrayList<>();
-        for(String s : unparsed) {
-            parsed.add(serializer.deserialize(s));
-        }
+    protected Component parse(String unparsed) {
+        return serializer.deserialize(unparsed);
     }
 }

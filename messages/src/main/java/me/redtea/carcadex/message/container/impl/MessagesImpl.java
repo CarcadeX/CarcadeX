@@ -13,7 +13,7 @@ import java.util.Objects;
 public class MessagesImpl implements Messages {
     private Map<String, Message> messages;
 
-    private final MessageFactory factory = MessageFactory.instance;
+    private MessageFactory factory = MessageFactory.instance;
 
     private final Message NULL_MESSAGE = factory.nullMessage();
 
@@ -40,6 +40,11 @@ public class MessagesImpl implements Messages {
     @Override
     public void reload(ConfigurationSection section) {
         messages = fromConfigurationToMap(section);
+    }
+
+    @Override
+    public void factory(MessageFactory messageFactory) {
+        this.factory = messageFactory;
     }
 
     private Map<String, Message> fromConfigurationToMap(@NotNull ConfigurationSection section) {

@@ -1,17 +1,13 @@
 package me.redtea.carcadex;
 
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import me.redtea.carcadex.repo.Repo;
-import me.redtea.carcadex.schema.SchemaStrategy;
-import org.bukkit.plugin.java.JavaPlugin;
-
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import me.redtea.carcadex.util.LBRunnable;
 
 public final class CarcadeX {
+    void a() {
+        ((LBRunnable) () -> {
+
+        }).get().run();
+    }
     /*
     void a() {
         Repo.<String, String> builder();
