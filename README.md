@@ -43,6 +43,11 @@ Messages messages = Messages.of(this, "filename.yml");
 Messages messages = Messages.of(getConfig().getConfigurationSection("messages"));
 ```
 
+For old versions(<1.18):
+```java
+Messages messages = Messages.legacy(this); //the creation methods are similar to '.of' methods
+```
+
 Repo
 ---------------
 <p>You can use Repo.<K, V>builder() to create the repository you need.<p>
