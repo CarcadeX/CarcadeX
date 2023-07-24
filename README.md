@@ -366,7 +366,7 @@ For example:
 `translateHexColorCodes(String)` - translates hex and legacy colors
 
 <h3>UUIDSerializer</h3>
-Serializer of UUID of kotlinx.serialization
+Serializer of UUID for kotlinx.serialization
 
 ```kotlin
 @Serializable
