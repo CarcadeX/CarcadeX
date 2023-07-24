@@ -285,6 +285,97 @@ Repo.builder()
           .build();
 ```
 
+<h3>YamlRepo</h3>
+<p>Implementation of immutable repo. Takes data from a file in YAML markup. Requires implementing ParseStrategy#fromYaml(FileConfiguration) to get the parse from the file.</p>
+<p>For example:</p>
+
+```java
+Repo<String, List<Integer>> capacity = new YamlRepo<>(
+    new File(getDataFolder(), "capacity.yml").toPath(),
+    this,
+    conf -> conf.getKeys(false).stream().collect(Collectors.toMap(
+        value -> value,
+        conf::getIntegerList))
+);
+```
+
+ChatHandler
+---------------
+<p>ChatHandler allows to run some action when the handled player writes something to the chat. The player's message will be canceled. After running the action, the player is no longer handled.<p>
+Steps to start using ChatHandler:
+
+1. Get an instance of the ChatHanlder class: 
+```java
+ChatHandler chatHandler = ChatHandler.getInstance();
+```
+2. Bind it to your plugin
+```java
+chatHandler.bind(plugin);
+```
+3. Start the handle player: 
+```java
+ChatHandler.getInstance().handle(player, (player, message) -> {
+    if(message.equals("yes")) player.sendMessage("ok");
+});
+```
+
+Utils
+---------------
+<h3>MaterialUtils</h3>
+<p>Contains several methods for working with Material</p>
+
+`getMaterialFromString(String)` - Returns the material with the specified name or Material.AIR
+
+`remove(Inventory inventory, Material type, int n)` - Removes n items of Material from inventory
+
+`count(Inventory inventory, Material type)` - Count of items with type 'type' in inventory
+
+
+<h3>NumUtils</h3>
+<p>Utils for parsing time from string</p>
+
+`formatDurationTime(long)` - Time in milis to string in format hours:minutes:seconds
+
+`ticksFromString, millisFromString, secondsFromString, minutesFromString, hoursFromString, daysFromString`</br>
+All these functions convert a string to time.</br>
+
+<b>Format of string</b>
+     <ul>
+       <li><b><i>none</i></b> - ticks (one second = 20 ticks)</li>
+       <li><b>s</b> - seconds</li>
+       <li><b>m</b> - minutes</li>
+      <li><b>h</b> - hours</li>
+       <li><b>d</b> - days</li>
+     </ul>
+<p>For example: "20 1s 2h"</p>
+
+<h3>PlayerUtils</h3>
+
+`uuidByName(String)` - Returns uuid of player by name
+
+<h3>RunnableX</h3>
+Simplified syntax for BukkitRunnable</br>
+For example:
+
+```java
+((RunnableX)() -> System.out.println("test")).runTask(plugin);
+```
+
+<h3>MD5ColorUtils</h3>
+
+`translateHexColorCodes(String)` - translates hex and legacy colors
+
+<h3>UUIDSerializer</h3>
+Serializer of UUID of kotlinx.serialization
+
+```kotlin
+@Serializable
+data class RentalRecord(
+    val tag: String,
+    @Serializable(with = UUIDSerializer::class)
+    val renter: UUID)
+```
+
 Supporting
 ---------------
 <p>Paper 1.16.x or higher</p>
@@ -299,7 +390,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.iredtea:carcadex:1.0.7") //or add it to plugin.yml: libraries and set compileOnly
+    implementation("io.github.iredtea:carcadex:1.1.0") //or add it to plugin.yml: libraries and set compileOnly
 }
 ```
 **Maven:**
@@ -307,6 +398,6 @@ dependencies {
 <dependency>
     <groupId>io.github.iredtea</groupId>
     <artifactId>carcadex</artifactId>
-    <version>1.0.7</version>
+    <version>1.1.0</version>
 </dependency>
 ```

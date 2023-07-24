@@ -3,6 +3,7 @@ package me.redtea.carcadex.repo.decorator;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import me.redtea.carcadex.repo.impl.CacheRepo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -22,12 +23,12 @@ public abstract class CacheRepoDecorator<K, V> implements CacheRepo<K, V> {
     }
 
     @Override
-    public V update(K key, V value) {
+    public V update(@NotNull K key, @NotNull V value) {
         return repo.update(key, value);
     }
 
     @Override
-    public V remove(K key) {
+    public V remove(@NotNull K key) {
         return repo.remove(key);
     }
 
@@ -42,7 +43,7 @@ public abstract class CacheRepoDecorator<K, V> implements CacheRepo<K, V> {
     }
 
     @Override
-    public Optional<V> get(K key) {
+    public Optional<V> get(@NotNull K key) {
         return repo.get(key);
     }
 

@@ -1,13 +1,12 @@
 package me.redtea.carcadex;
 
-import me.redtea.carcadex.util.LBRunnable;
+import me.redtea.carcadex.chathandler.ChatAction;
+import me.redtea.carcadex.chathandler.ChatHandler;
+import me.redtea.carcadex.utils.RunnableX;
+import org.bukkit.entity.Player;
 
 public final class CarcadeX {
-    void a() {
-        ((LBRunnable) () -> {
-
-        }).get().run();
-    }
+    void a() {}
     /*
     void a() {
         Repo.<String, String> builder();

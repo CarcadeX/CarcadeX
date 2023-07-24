@@ -5,9 +5,12 @@ import me.redtea.carcadex.message.factory.MessageFactory;
 import me.redtea.carcadex.message.factory.impl.LegacyFactoryImpl;
 import me.redtea.carcadex.message.model.Message;
 import me.redtea.carcadex.message.model.impl.NullMessage;
+import me.redtea.carcadex.reload.Reloadable;
+import me.redtea.carcadex.reload.parameterized.ParameterizedReloadable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -57,10 +60,14 @@ import java.nio.file.Path;
  * Messages messages = Messages.of(section);
  * }
  * </pre>
+ * Reloadable Container:
+ * section - ConfigurationSection with messages
+ * file - File with messages
+ * SectionProvider - provider of section with messages
  * @since 1.0.0
  * @author itzRedTea
  */
-public interface Messages {
+public interface Messages extends Reloadable {
     /**
      * <h1>Get message from container by key/yaml path</h1>
      *
@@ -93,7 +100,7 @@ public interface Messages {
      * @return Message
      * @see Message
      */
-    Message get(String key);
+    @NotNull Message get(@NotNull String key);
 
     /**
      * <h1>Put message to container</h1>
@@ -102,7 +109,7 @@ public interface Messages {
      * @return putted message
      * @see Message
      */
-    Message put(String key, Message message);
+    @NotNull Message put(@NotNull String key, @NotNull Message message);
 
     /**
      * @param key key/yaml path to message
@@ -114,12 +121,12 @@ public interface Messages {
      * <h1>Reload container with messages in section from args.</h1>
      * @param section - ConfigurationSection with messages
      */
-    void reload(ConfigurationSection section);
+    void reload(@NotNull ConfigurationSection section);
 
     /**
      * <h1>Sets custom message parse factory.</h1>
      */
-    void factory(MessageFactory messageFactory);
+    void factory(@NotNull MessageFactory messageFactory);
 
     /**
      * <h1>Create container using configuration section</h1>
@@ -133,7 +140,7 @@ public interface Messages {
      * @param section - configuration section with messages
      * @return container with messages
      */
-    static Messages of(ConfigurationSection section) {
+    static @NotNull Messages of(@NotNull ConfigurationSection section) {
         return new MessagesImpl(section);
     }
 
@@ -149,7 +156,7 @@ public interface Messages {
      * @param plugin - plugin that creates a container
      * @return container with messages
      */
-    static Messages of(Plugin plugin, String fileName) {
+    static @NotNull Messages of(@NotNull Plugin plugin, @NotNull String fileName) {
         File file = new File(plugin.getDataFolder(), fileName);
         if(!file.exists()) plugin.saveResource(fileName, false);
         return of(YamlConfiguration.loadConfiguration(file));
@@ -167,7 +174,7 @@ public interface Messages {
      * @param plugin - plugin that creates a container
      * @return container with messages
      */
-    static Messages of(Plugin plugin) {
+    static @NotNull Messages of(@NotNull Plugin plugin) {
         return of(plugin, "messages.yml");
     }
 
@@ -182,7 +189,7 @@ public interface Messages {
      * @param file - file with messages
      * @return container with messages
      */
-    static Messages of(File file) {
+    static @NotNull Messages of(@NotNull File file) {
         return of(YamlConfiguration.loadConfiguration(file));
     }
 
@@ -193,7 +200,7 @@ public interface Messages {
      * @return container with messages
      * @see Messages#of(File)
      */
-    static Messages of(Path path) {
+    static @NotNull Messages of(@NotNull Path path) {
         return of(path.toFile());
     }
 
@@ -201,34 +208,37 @@ public interface Messages {
      * Only legacy color codes. For versions < 1.18
      * @return container with messages
      */
-    @Deprecated
-    static Messages legacy(ConfigurationSection section) {
+    static @NotNull Messages legacy(@NotNull ConfigurationSection section) {
         return asLegacy(of(section));
     }
 
     /** @see Messages#legacy(ConfigurationSection) */
-    @Deprecated
-    static Messages legacy(Plugin plugin, String fileName) {
+    static @NotNull Messages legacy(@NotNull Plugin plugin, String fileName) {
         return asLegacy(of(plugin, fileName));
     }
 
     /** @see Messages#legacy(ConfigurationSection) */
-    @Deprecated
-    static Messages legacy(Plugin plugin) {
+    static @NotNull Messages legacy(@NotNull Plugin plugin) {
         return asLegacy(of(plugin));
     }
 
     /** @see Messages#legacy(ConfigurationSection) */
-    @Deprecated
-    static Messages legacy(File file) {
+    static @NotNull Messages legacy(@NotNull File file) {
         return asLegacy(of(file));
     }
 
     /** @see Messages#legacy(ConfigurationSection) */
-    @Deprecated
-    static Messages asLegacy(Messages messages) {
+    static @NotNull Messages asLegacy(@NotNull Messages messages) {
         messages.factory(new LegacyFactoryImpl());
         return messages;
+    }
+
+    /**
+     * @return empty messages container
+     * Use this with Reloader
+     */
+    static @NotNull Messages empty() {
+        return new MessagesImpl();
     }
 
     /**
@@ -236,4 +246,8 @@ public interface Messages {
      * @see NullMessage
      */
     Message NULL_MESSAGE = new NullMessage();
+    @Override
+    default int priority() {
+        return 1;
+    }
 }

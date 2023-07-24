@@ -2,6 +2,7 @@ package me.redtea.carcadex.repo.decorator.impl;
 
 import me.redtea.carcadex.repo.decorator.CacheRepoDecorator;
 import me.redtea.carcadex.repo.impl.CacheRepo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -52,7 +53,7 @@ public class CopyOnWriteDecorator<K, V> extends CacheRepoDecorator<K, V> {
     }
 
     @Override
-    public Optional<V> get(K key) {
+    public Optional<V> get(@NotNull K key) {
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
@@ -73,7 +74,7 @@ public class CopyOnWriteDecorator<K, V> extends CacheRepoDecorator<K, V> {
     }
 
     @Override
-    public V update(K key, V value) {
+    public V update(@NotNull K key, @NotNull V value) {
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {
@@ -87,7 +88,7 @@ public class CopyOnWriteDecorator<K, V> extends CacheRepoDecorator<K, V> {
         }
     }
 
-    public V remove(K key) {
+    public V remove(@NotNull K key) {
         final ReentrantLock lock = this.lock;
         lock.lock();
         try {

@@ -8,27 +8,29 @@ import me.redtea.carcadex.chathandler.handler.XCarcadeChatHandler;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class GlobalChatHandler implements ChatNotifiable, ChatHandler {
-    private final Map<String, List<ChatAction>> registered = new HashMap<>();
+    private Map<String, List<ChatAction>> registered;
     private Plugin plugin = null;
+
     @Override
-    public void handle(Player player, ChatAction chatAction) {
+    public void handle(@NotNull Player player, @NotNull ChatAction chatAction) {
         if(!registered.containsKey(player.getName())) registered.put(player.getName(), Lists.newArrayList(chatAction));
         else registered.get(player.getName()).add(chatAction);
     }
 
     @Override
-    public void unhandle(Player player) {
+    public void unhandle(@NotNull Player player) {
         registered.remove(player.getName());
     }
 
     @Override
-    public void bind(Plugin plugin) {
+    public void bind(@NotNull Plugin plugin) {
         if(this.plugin == null) {
             this.plugin = plugin;
             Bukkit.getPluginManager().registerEvents(new XCarcadeChatHandler(this), plugin);
@@ -41,5 +43,15 @@ public class GlobalChatHandler implements ChatNotifiable, ChatHandler {
             registered.get(player.getName()).forEach((a) -> a.onChat(player, message));
             unhandle(player);
         }
+    }
+
+    @Override
+    public void init() {
+        if(registered == null) registered = new HashMap<>();
+    }
+
+    @Override
+    public void close() {
+        registered.clear();
     }
 }

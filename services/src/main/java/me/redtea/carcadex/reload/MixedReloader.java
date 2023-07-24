@@ -2,11 +2,13 @@ package me.redtea.carcadex.reload;
 
 import com.google.inject.Injector;
 import me.redtea.carcadex.reload.exception.SimpledReloaderException;
+import me.redtea.carcadex.reload.parameterized.ParameterizedReloadable;
+import me.redtea.carcadex.reload.parameterized.container.ReloadContainer;
 
 import java.util.*;
 
 public class MixedReloader implements Reloader {
-    private Injector injector;
+    private final Injector injector;
 
     private final Set<Reloadable> reloadables = new HashSet<>();
 
@@ -16,6 +18,7 @@ public class MixedReloader implements Reloader {
             reload();
         }
     };
+    private final Map<Class<?>, ReloadContainer> containers = new HashMap<>();
 
     private final Timer timer = new Timer();
 
@@ -41,13 +44,22 @@ public class MixedReloader implements Reloader {
     @Override
     public long reload() {
         long time = new Date().getTime();
-        reloadables.forEach(Reloadable::reload);
+        for(Reloadable reloadable : reloadables) {
+            if(reloadable instanceof ParameterizedReloadable) {
+                ((ParameterizedReloadable) reloadable).init(containers.get(reloadable.getClass()));
+            } else reloadable.reload();
+        }
         return new Date().getTime() - time;
     }
 
     @Override
     public void close() {
         reloadables.forEach(Reloadable::close);
+    }
+
+    @Override
+    public <T extends ParameterizedReloadable> void container(Class<T> tClass, ReloadContainer container) {
+        containers.put(tClass, container);
     }
 
     @Override

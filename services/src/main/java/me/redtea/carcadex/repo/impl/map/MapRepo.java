@@ -1,14 +1,23 @@
 package me.redtea.carcadex.repo.impl.map;
 
+import me.redtea.carcadex.reload.parameterized.ParameterizedReloadable;
+import me.redtea.carcadex.reload.parameterized.container.ReloadContainer;
 import me.redtea.carcadex.repo.Repo;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class MapRepo<K, V> implements Repo<K, V> {
-    protected final Map<K, V> data = new HashMap<>();
+/**
+ * Reload container:
+ * data - Map.class
+ * @param <K>
+ * @param <V>
+ */
+public abstract class MapRepo<K, V> extends ParameterizedReloadable implements Repo<K, V> {
+    protected Map<K, V> data = new HashMap<>();
 
     @Override
     public Collection<V> all() {
@@ -16,10 +25,14 @@ public abstract class MapRepo<K, V> implements Repo<K, V> {
     }
 
     @Override
-    public Optional<V> get(K key) {
+    public Optional<V> get(@NotNull K key) {
         return Optional.ofNullable(data.get(key));
     }
 
+    @Override
+    public void init(ReloadContainer container) {
+        if(container != null) data = container.get("data");
+    }
 
     @Override
     public void close() {

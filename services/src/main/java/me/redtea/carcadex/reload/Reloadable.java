@@ -9,4 +9,8 @@ public interface Reloadable {
         close();
         init();
     }
+
+    default int priority() {
+        return 0;
+    }
 }

@@ -2,12 +2,13 @@ package me.redtea.carcadex.repo;
 
 import me.redtea.carcadex.reload.Reloadable;
 import me.redtea.carcadex.repo.Repo;
+import org.jetbrains.annotations.NotNull;
 
 public interface MutableRepo<K, V> extends Repo<K, V>, Reloadable {
 
-    V update(K key, V value);
+    V update(@NotNull K key, @NotNull V value);
 
-    V remove(K key);
+    V remove(@NotNull K key);
 
     void saveAll();
 }

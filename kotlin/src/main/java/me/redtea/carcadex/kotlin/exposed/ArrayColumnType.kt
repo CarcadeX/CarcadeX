@@ -1,15 +1,11 @@
-import org.jetbrains.exposed.sql.Column
-import org.jetbrains.exposed.sql.ColumnType
-import org.jetbrains.exposed.sql.CustomStringFunction
-import org.jetbrains.exposed.sql.EqOp
-import org.jetbrains.exposed.sql.Expression
-import org.jetbrains.exposed.sql.ExpressionWithColumnType
-import org.jetbrains.exposed.sql.Table
+import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.statements.api.ExposedBlob
 import org.jetbrains.exposed.sql.statements.api.PreparedStatementApi
 import org.jetbrains.exposed.sql.statements.jdbc.JdbcPreparedStatementImpl
-import org.jetbrains.exposed.sql.stringLiteral
 import org.jetbrains.exposed.sql.vendors.currentDialect
 import java.io.Serializable
+import java.util.Date
+import java.util.UUID
 import kotlin.Array
 import java.sql.Array as SQLArray
 
@@ -24,9 +20,25 @@ import java.sql.Array as SQLArray
  */
 public fun Table.textArray(name: String, size: Int? = null): Column<Array<String>> =
         array(name, currentDialect.dataTypeProvider.textType(), size)
+public fun Table.integerArray(name: String, size: Int? = null): Column<Array<Int>> =
+    array(name, currentDialect.dataTypeProvider.integerType(), size)
+public fun Table.floatArray(name: String, size: Int? = null): Column<Array<Float>> =
+    array(name, currentDialect.dataTypeProvider.floatType(), size)
+public fun Table.doubleArray(name: String, size: Int? = null): Column<Array<Double>> =
+    array(name, currentDialect.dataTypeProvider.doubleType(), size)
+public fun Table.booleanArray(name: String, size: Int? = null): Column<Array<Double>> =
+    array(name, currentDialect.dataTypeProvider.booleanType(), size)
+public fun Table.byteArray(name: String, size: Int? = null): Column<Array<Byte>> =
+    array(name, currentDialect.dataTypeProvider.byteType(), size)
+public fun Table.uuidArray(name: String, size: Int? = null): Column<Array<UUID>> =
+    array(name, currentDialect.dataTypeProvider.uuidType(), size)
+public fun Table.longArray(name: String, size: Int? = null): Column<Array<UUID>> =
+    array(name, currentDialect.dataTypeProvider.longType(), size)
+public fun Table.shortArray(name: String, size: Int? = null): Column<Array<UUID>> =
+    array(name, currentDialect.dataTypeProvider.shortType(), size)
 
-private fun <T : Serializable> Table.array(name: String, underlyingType: String, size: Int?) =
-        registerColumn<Array<T>>(name, ArrayColumnType<T>(underlyingType, size))
+private fun <T : Serializable> Table.array(name: String, underlyingType: String, size: Int? = null) =
+    registerColumn<Array<T>>(name, ArrayColumnType<T>(underlyingType, size))
 
 /**
  * Checks whether this string is in the [other] expression.

@@ -3,6 +3,7 @@ package me.redtea.carcadex.repo.impl.schema;
 import me.redtea.carcadex.repo.impl.CacheRepo;
 import me.redtea.carcadex.repo.impl.map.MapRepo;
 import me.redtea.carcadex.schema.SchemaStrategy;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -16,7 +17,7 @@ public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
     }
 
     @Override
-    public V update(K key, V value) {
+    public V update(@NotNull K key, @NotNull V value) {
         return data.put(key, value);
     }
 
@@ -26,7 +27,7 @@ public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
     }
 
     @Override
-    public Optional<V> get(K key) {
+    public Optional<V> get(@NotNull K key) {
         if(toRemove.contains(key)) return Optional.ofNullable(null);
         V result = data.get(key);
         if(result == null) try {
@@ -37,7 +38,7 @@ public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
     }
 
     @Override
-    public V remove(K key) {
+    public V remove(@NotNull K key) {
         if(!get(key).isPresent()) throw new NoSuchElementException();
         toRemove.add(key);
         return data.remove(key);

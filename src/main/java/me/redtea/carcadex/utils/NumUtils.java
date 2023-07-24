@@ -1,4 +1,6 @@
-package me.redtea.carcadex.util;
+package me.redtea.carcadex.utils;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Formatter;
 
@@ -9,7 +11,7 @@ import java.util.Formatter;
 public class NumUtils {
     /**
      *
-     * @param durationTicks time in ticks that will be parsed (1 tick = 20 seconds)
+     * @param durationTicks time in ticks that will be parsed (one second = 20 ticks)
      * @return parsed string in format HOURS:MINUTES:SECONDS
      */
     public String formatDurationTime(long durationTicks) {
@@ -33,7 +35,7 @@ public class NumUtils {
      *
      * <h2>Allowed formats</h2>
      * <ul>
-     *   <li><b><i>none</i></b> - ticks (= 20 seconds)</li>
+     *   <li><b><i>none</i></b> - ticks (one second = 20 ticks)</li>
      *   <li><b>s</b> - seconds</li>
      *   <li><b>m</b> - minutes</li>
      *   <li><b>h</b> - hours</li>
@@ -45,7 +47,7 @@ public class NumUtils {
      * @param timeString string to parse
      * @return parsed time in ticks
      */
-    public long ticksFromString(String timeString) {
+    public long ticksFromString(@NotNull String timeString) {
         return timeFromString(timeString, 20);
     }
 
@@ -66,7 +68,7 @@ public class NumUtils {
      * @param timeString string to parse
      * @return parsed time in millis
      */
-    public long millisFromString(String timeString) {
+    public long millisFromString(@NotNull String timeString) {
         return timeFromString(timeString, 1000);
     }
 
@@ -77,7 +79,7 @@ public class NumUtils {
      * @return parsed time in sec
      * @see NumUtils#millisFromString
      */
-    public long secondsFromString(String timeString) {
+    public long secondsFromString(@NotNull String timeString) {
         return millisFromString(timeString)/1000;
     }
 
@@ -88,7 +90,7 @@ public class NumUtils {
      * @return parsed time in mins
      * @see NumUtils#millisFromString
      */
-    public long minutesFromString(String timeString) {
+    public long minutesFromString(@NotNull String timeString) {
         return millisFromString(timeString)/1000/60;
     }
 
@@ -99,7 +101,7 @@ public class NumUtils {
      * @return parsed time in hours
      * @see NumUtils#millisFromString
      */
-    public long hoursFromString(String timeString) {
+    public long hoursFromString(@NotNull String timeString) {
         return millisFromString(timeString)/1000/60/60;
     }
 
@@ -110,11 +112,11 @@ public class NumUtils {
      * @return parsed time in days
      * @see NumUtils#millisFromString
      */
-    public long daysFromString(String timeString) {
+    public long daysFromString(@NotNull String timeString) {
         return millisFromString(timeString)/1000/60/60/24;
     }
 
-    public long timeFromString(String timeString, int k) {
+    public long timeFromString(@NotNull String timeString, int k) {
         long result = 0L;
         for(String sub : timeString.split(" ")) {
             if(sub.matches("[0-9]+")) {

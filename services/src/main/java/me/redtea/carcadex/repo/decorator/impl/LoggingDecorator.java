@@ -2,6 +2,7 @@ package me.redtea.carcadex.repo.decorator.impl;
 
 import me.redtea.carcadex.repo.decorator.CacheRepoDecorator;
 import me.redtea.carcadex.repo.impl.CacheRepo;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -54,7 +55,7 @@ public class LoggingDecorator<K, V> extends CacheRepoDecorator<K, V> {
     }
 
     @Override
-    public V update(K key, V value) {
+    public V update(@NotNull K key, @NotNull V value) {
         try {
             log("Updating the repository...");
             log("Key: " + key + " Value: " + value);
@@ -66,7 +67,7 @@ public class LoggingDecorator<K, V> extends CacheRepoDecorator<K, V> {
     }
 
     @Override
-    public V remove(K key) {
+    public V remove(@NotNull K key) {
         try {
             log("Removing from repository...");
             log("Key: " + key);
@@ -101,7 +102,7 @@ public class LoggingDecorator<K, V> extends CacheRepoDecorator<K, V> {
     }
 
     @Override
-    public Optional<V> get(K key) {
+    public Optional<V> get(@NotNull K key) {
         try {
             log("Getting value from repository...");
             log("Key: " + key);

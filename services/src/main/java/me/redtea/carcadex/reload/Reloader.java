@@ -1,9 +1,12 @@
 package me.redtea.carcadex.reload;
 
 import com.google.inject.Injector;
+import me.redtea.carcadex.reload.parameterized.ParameterizedReloadable;
+import me.redtea.carcadex.reload.parameterized.container.ReloadContainer;
 
 public interface Reloader {
     void add(Reloadable... reloadables);
+
 
     <T extends Reloadable> void add(Class<T> type);
 
@@ -13,6 +16,7 @@ public interface Reloader {
     long reload();
 
     void close();
+    <T extends ParameterizedReloadable>void container(Class<T> type, ReloadContainer container);
 
     void autoSaveInterval(long interval);
 

@@ -4,13 +4,19 @@ import com.google.common.collect.Lists;
 import me.redtea.carcadex.message.factory.MessageFactory;
 import me.redtea.carcadex.message.model.Message;
 import me.redtea.carcadex.message.model.impl.serialized.impl.LegacyMessage;
+import me.redtea.carcadex.message.utils.MD5ColorUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LegacyFactoryImpl implements MessageFactory {
     @Override
     public Message message(List<String> unparsed) {
         if(unparsed == null || unparsed.isEmpty()) return nullMessage();
+        if(unparsed.stream().anyMatch(it -> it.contains("&"))) unparsed =
+                unparsed.stream()
+                        .map(MD5ColorUtils::translateHexColorCodes)
+                        .collect(Collectors.toList());
         return new LegacyMessage(unparsed);
     }
 
