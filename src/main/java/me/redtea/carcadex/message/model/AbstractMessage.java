@@ -1,14 +1,12 @@
 package me.redtea.carcadex.message.model;
 
 import com.cryptomorin.xseries.XMaterial;
-import me.redtea.carcadex.message.model.impl.ComponentMessage;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public abstract class AbstractMessage implements Message {
     protected final List<String> unparsed;
@@ -41,12 +39,6 @@ public abstract class AbstractMessage implements Message {
     public List<Component> asComponentList() {
         parse();
         return parsed;
-    }
-
-    @Override
-    @NotNull
-    public Message replaceAll(@NotNull String from, @NotNull String to) {
-        return new ComponentMessage(unparsed.stream().map(it -> it.replaceAll(from, to)).collect(Collectors.toList()));
     }
 
     @Override
