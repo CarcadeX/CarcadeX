@@ -21,7 +21,7 @@ import java.util.Optional;
 public class MessagesImpl extends ParameterizedReloadable implements Messages {
     private Map<String, Message> messages;
 
-    private MessageFactory factory = MessageFactory.instance;
+    private MessageFactory factory;
 
     private final Message NULL_MESSAGE = factory.nullMessage();
 
@@ -33,16 +33,18 @@ public class MessagesImpl extends ParameterizedReloadable implements Messages {
     public MessagesImpl() {
     }
 
-    public MessagesImpl(@NotNull ConfigurationSection section) {
+    public MessagesImpl(@NotNull ConfigurationSection section, MessageFactory factory) {
         this.section = section;
+        this.factory = factory;
+        parse();
     }
 
-    public MessagesImpl(@NotNull File file) {
-        this(YamlConfiguration.loadConfiguration(file));
+    public MessagesImpl(@NotNull File file, MessageFactory factory) {
+        this(YamlConfiguration.loadConfiguration(file), factory);
     }
 
-    public MessagesImpl(@NotNull SectionProvider sectionProvider) {
-        this(sectionProvider.get());
+    public MessagesImpl(@NotNull SectionProvider sectionProvider, MessageFactory factory) {
+        this(sectionProvider.get(), factory);
     }
 
     @Override
@@ -79,15 +81,13 @@ public class MessagesImpl extends ParameterizedReloadable implements Messages {
     }
 
     @Override
-    public Messages factory(@NotNull MessageFactory messageFactory) {
+    public void factory(@NotNull MessageFactory messageFactory) {
         this.factory = messageFactory;
-        return this;
     }
 
     @Override
-    public Messages parse() {
+    public void parse() {
         if(section != null) messages = fromConfigurationToMap(section);
-        return this;
     }
 
     @Override

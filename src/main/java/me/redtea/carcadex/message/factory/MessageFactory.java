@@ -15,6 +15,4 @@ public interface MessageFactory {
     default Message nullMessage() {
         return Messages.NULL_MESSAGE;
     }
-
-    MessageFactory instance = new MessageFactoryImpl();
 }

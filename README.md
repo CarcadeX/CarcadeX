@@ -40,7 +40,7 @@ Messages messages = Messages.of(this, "filename.yml");
 ```
 3. Load using ConfigurationSection: 
 ```java
-Messages messages = Messages.of(getConfig().getConfigurationSection("messages"));
+Messages messages = Messages.of(getConfig().getConfigurationSection("messages"), this);
 ```
 
 For old versions(<1.18):

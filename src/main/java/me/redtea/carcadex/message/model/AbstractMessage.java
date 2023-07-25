@@ -1,8 +1,11 @@
 package me.redtea.carcadex.message.model;
 
 import com.cryptomorin.xseries.XMaterial;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
 import net.kyori.adventure.text.Component;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -13,8 +16,11 @@ public abstract class AbstractMessage implements Message {
 
     protected List<Component> parsed = null;
 
-    public AbstractMessage(List<String> unparsed) {
+    protected final BukkitAudiences adventure;
+
+    public AbstractMessage(List<String> unparsed, Plugin plugin) {
         this.unparsed = unparsed;
+        adventure = BukkitAudiences.create(plugin);
     }
 
     protected abstract Component parse(String unparsed);
@@ -29,7 +35,8 @@ public abstract class AbstractMessage implements Message {
     @Override
     public void send(@NotNull CommandSender sender) {
         parse();
-        parsed.forEach(sender::sendMessage);
+        Audience audience = adventure.sender(sender);
+        parsed.forEach(audience::sendMessage);
     }
 
     private Component cacheComponent = null;

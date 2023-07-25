@@ -1,12 +1,12 @@
 package me.redtea.carcadex.message.container;
 
+import me.redtea.carcadex.message.factory.impl.MessageFactoryImpl;
 import me.redtea.carcadex.message.model.Message;
 import me.redtea.carcadex.message.container.impl.MessagesImpl;
 import me.redtea.carcadex.message.factory.MessageFactory;
 import me.redtea.carcadex.message.factory.impl.LegacyFactoryImpl;
 import me.redtea.carcadex.message.model.impl.NullMessage;
 import me.redtea.carcadex.message.verifier.MessageVerifier;
-import me.redtea.carcadex.message.verifier.impl.FileMessageVerifier;
 import me.redtea.carcadex.reload.Reloadable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -14,7 +14,6 @@ import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
-import java.io.InputStream;
 import java.nio.file.Path;
 
 /**
@@ -128,9 +127,9 @@ public interface Messages extends Reloadable {
     /**
      * <h1>Sets custom message parse factory.</h1>
      */
-    Messages factory(@NotNull MessageFactory messageFactory);
+    void factory(@NotNull MessageFactory messageFactory);
 
-    Messages parse();
+    void parse();
 
     void verifier(MessageVerifier verifier);
 
@@ -146,8 +145,8 @@ public interface Messages extends Reloadable {
      * @param section - configuration section with messages
      * @return container with messages
      */
-    static Messages of(ConfigurationSection section) {
-        return new MessagesImpl(section).parse();
+    static Messages of(ConfigurationSection section, MessageFactory factory) {
+        return new MessagesImpl(section, factory);
     }
 
     /**
@@ -165,7 +164,7 @@ public interface Messages extends Reloadable {
     static Messages of(Plugin plugin, String fileName) {
         File file = new File(plugin.getDataFolder(), fileName);
         if(!file.exists()) plugin.saveResource(fileName, false);
-        return of(YamlConfiguration.loadConfiguration(file));
+        return of(YamlConfiguration.loadConfiguration(file), new MessageFactoryImpl(plugin));
     }
 
     /**
@@ -195,8 +194,8 @@ public interface Messages extends Reloadable {
      * @param file - file with messages
      * @return container with messages
      */
-    static Messages of(File file) {
-        return of(YamlConfiguration.loadConfiguration(file));
+    static Messages of(File file, Plugin plugin) {
+        return of(YamlConfiguration.loadConfiguration(file), new MessageFactoryImpl(plugin));
     }
 
     /**
@@ -204,35 +203,35 @@ public interface Messages extends Reloadable {
      *
      * @param path - file with messages
      * @return container with messages
-     * @see Messages#of(File)
+     * @see Messages#of(File, Plugin)
      */
-    static Messages of(Path path) {
-        return of(path.toFile());
+    static Messages of(Path path, Plugin plugin) {
+        return of(path.toFile(), plugin);
     }
 
     /**
      * Only legacy color codes. For versions lower than 1.18
      * @return container with messages
      */
-    static Messages legacy(ConfigurationSection section) {
-        return new MessagesImpl(section).factory(new LegacyFactoryImpl());
+    static Messages legacy(ConfigurationSection section, Plugin plugin) {
+        return new MessagesImpl(section, new LegacyFactoryImpl(plugin));
     }
 
-    /** @see Messages#legacy(ConfigurationSection) */
+    /** @see Messages#legacy(ConfigurationSection, Plugin) */
     static Messages legacy(Plugin plugin, String fileName) {
         File file = new File(plugin.getDataFolder(), fileName);
         if(!file.exists()) plugin.saveResource(fileName, false);
-        return new MessagesImpl(file).factory(new LegacyFactoryImpl()).parse();
+        return new MessagesImpl(file, new LegacyFactoryImpl(plugin));
     }
 
-    /** @see Messages#legacy(ConfigurationSection) */
+    /** @see Messages#legacy(ConfigurationSection, Plugin) */
     static Messages legacy(Plugin plugin) {
         return legacy(plugin, "messages.yml");
     }
 
-    /** @see Messages#legacy(ConfigurationSection) */
-    static Messages legacy(File file) {
-        return new MessagesImpl(file).factory(new LegacyFactoryImpl()).parse();
+    /** @see Messages#legacy(ConfigurationSection, Plugin) */
+    static Messages legacy(File file, Plugin plugin) {
+        return new MessagesImpl(file, new LegacyFactoryImpl(plugin));
     }
 
     /**
