@@ -211,7 +211,7 @@ public interface Messages extends Reloadable {
     }
 
     /**
-     * Only legacy color codes. For versions < 1.18
+     * Only legacy color codes. For versions lower than 1.18
      * @return container with messages
      */
     static Messages legacy(ConfigurationSection section) {
