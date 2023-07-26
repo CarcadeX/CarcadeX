@@ -52,11 +52,12 @@ dependencies {
 
     compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'com.github.cryptomorin:XSeries:9.2.0' //add to libs
-    compileOnly files("libs/MiniMessages.jar")
-
     compileOnly 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1' //add to libs
 
-    compileOnly 'com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT'
+    implementation "net.kyori:adventure-api:4.14.0"
+    implementation "net.kyori:adventure-platform-bukkit:4.3.0"
+    implementation files("libs/MiniMessages.jar")
+
     compileOnly 'com.google.inject:guice:5.1.0' //add to libs
     compileOnly 'com.google.inject.extensions:guice-assistedinject:5.1.0' //add to libs
     compileOnly("org.projectlombok:lombok:1.18.22")

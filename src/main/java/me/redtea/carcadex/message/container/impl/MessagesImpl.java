@@ -4,6 +4,7 @@ import me.redtea.carcadex.message.container.Messages;
 import me.redtea.carcadex.message.container.util.SectionProvider;
 import me.redtea.carcadex.message.model.Message;
 import me.redtea.carcadex.message.factory.MessageFactory;
+import me.redtea.carcadex.message.model.impl.NullMessage;
 import me.redtea.carcadex.message.verifier.MessageVerifier;
 import me.redtea.carcadex.reload.parameterized.ParameterizedReloadable;
 import me.redtea.carcadex.reload.parameterized.container.ReloadContainer;
@@ -23,7 +24,7 @@ public class MessagesImpl extends ParameterizedReloadable implements Messages {
 
     private MessageFactory factory;
 
-    private final Message NULL_MESSAGE = factory.nullMessage();
+    private final Message NULL_MESSAGE;
 
     private ConfigurationSection section;
 
@@ -31,11 +32,13 @@ public class MessagesImpl extends ParameterizedReloadable implements Messages {
     private MessageVerifier verifier;
 
     public MessagesImpl() {
+        NULL_MESSAGE = new NullMessage();
     }
 
     public MessagesImpl(@NotNull ConfigurationSection section, MessageFactory factory) {
         this.section = section;
         this.factory = factory;
+        NULL_MESSAGE = factory.nullMessage();
         parse();
     }
 
