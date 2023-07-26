@@ -39,7 +39,7 @@ public class MaterialUtils {
      * @param type material of item
      * @param amount amount of item
      */
-    public void remove(@NotNull Inventory inventory, @NotNull Material type, int amount) {
+    public static void remove(@NotNull Inventory inventory, @NotNull Material type, int amount) {
         if (amount <= 0) return;
         for (int slot = 0; slot < inventory.getSize(); slot++) {
             ItemStack is = inventory.getItem(slot);
@@ -64,7 +64,7 @@ public class MaterialUtils {
      * @param type material of item
      * @return count of items with material 'type'
      */
-    public int count(@NotNull Inventory inventory, @NotNull Material type) {
+    public static int count(@NotNull Inventory inventory, @NotNull Material type) {
         int result = 0;
         for (int slot = 0; slot < inventory.getSize(); slot++) {
             ItemStack is = inventory.getItem(slot);

@@ -1,6 +1,7 @@
 package me.redtea.carcadex.utils;
 
 import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.IOException;
@@ -10,10 +11,10 @@ import java.util.Scanner;
 import java.util.function.Consumer;
 
 public class UpdateChecker {
-    private final JavaPlugin plugin;
+    private final Plugin plugin;
     private final int resourceId;
 
-    public UpdateChecker(JavaPlugin plugin, int resourceId) {
+    public UpdateChecker(Plugin plugin, int resourceId) {
         this.plugin = plugin;
         this.resourceId = resourceId;
     }
