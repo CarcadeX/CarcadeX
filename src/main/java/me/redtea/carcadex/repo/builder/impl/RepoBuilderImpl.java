@@ -3,7 +3,7 @@ package me.redtea.carcadex.repo.builder.impl;
 import me.redtea.carcadex.repo.MutableRepo;
 import me.redtea.carcadex.repo.builder.RepoBuilder;
 import me.redtea.carcadex.repo.decorator.impl.AutoSaveDecorator;
-import me.redtea.carcadex.repo.decorator.impl.CopyOnWriteDecorator;
+import me.redtea.carcadex.repo.decorator.impl.SynchronizedDecorator;
 import me.redtea.carcadex.repo.decorator.impl.LoggingDecorator;
 import me.redtea.carcadex.repo.impl.CacheRepo;
 import me.redtea.carcadex.repo.impl.common.CommonRepo;
@@ -103,7 +103,7 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
         return this;
     }
 
-    @Override
+   @Override
     public RepoBuilder<K, V> threadSafe() {
         threadSafe = true;
         return this;
@@ -138,7 +138,7 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
         }
 
         if(threadSafe) {
-            result = new CopyOnWriteDecorator<>(result);
+            result = new SynchronizedDecorator<>(result);
         }
 
         return result;
