@@ -13,8 +13,8 @@ import java.util.Optional;
 /**
  * Reload container:
  * data - Map.class
- * @param <K>
- * @param <V>
+ * @param <K> key
+ * @param <V> value
  */
 public abstract class MapRepo<K, V> extends ParameterizedReloadable implements Repo<K, V> {
     protected Map<K, V> data = new HashMap<>();

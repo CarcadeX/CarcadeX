@@ -130,6 +130,9 @@ public interface Messages extends Reloadable {
      */
     void factory(@NotNull MessageFactory messageFactory);
 
+    /**
+     * <h1>Parses all messages in stored section</h1>
+     */
     void parse();
 
     void verifier(MessageVerifier verifier);
