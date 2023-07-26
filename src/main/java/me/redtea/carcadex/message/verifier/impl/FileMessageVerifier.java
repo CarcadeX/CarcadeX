@@ -25,8 +25,8 @@ public class FileMessageVerifier implements MessageVerifier {
     }
 
     @Override
-    public Optional<String> fromDefault(String key) {
-        Optional<String> o = Optional.ofNullable(defaultSection.getString(key));
+    public Optional<Object> fromDefault(String key) {
+        Optional<Object> o = Optional.ofNullable(defaultSection.get(key));
         o.ifPresent(s -> saveToMain(key, s));
         return o;
     }

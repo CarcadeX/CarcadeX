@@ -14,10 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 public class MessagesImpl extends ParameterizedReloadable implements Messages {
     private Map<String, Message> messages;
@@ -54,9 +51,11 @@ public class MessagesImpl extends ParameterizedReloadable implements Messages {
     public @NotNull Message get(@NotNull String key) {
         if(!has(key)) {
             if(verifier != null) {
-                Optional<String> def = verifier.fromDefault(key);
+                Optional<Object> def = verifier.fromDefault(key);
                 if(def.isPresent()) {
-                    messages.put(key, factory.message(def.get()));
+                    if(def.get() instanceof List) {
+                        messages.put(key, factory.message((List<String>) def.get()));
+                    } else put(key, factory.message(def.get().toString()));
                     return messages.get(key);
                 }
                 return NULL_MESSAGE;
@@ -102,27 +101,27 @@ public class MessagesImpl extends ParameterizedReloadable implements Messages {
 
     private Map<String, Message> fromConfigurationToMap(@NotNull ConfigurationSection section) {
         Map<String, Message> data = new HashMap<>();
-
         section.getKeys(false).forEach(key -> {
             if (section.isConfigurationSection(key)) {
                 Map<String, Message> newMessages = fromConfigurationToMap(Objects.
                         requireNonNull(section.getConfigurationSection(key)));
                 newMessages.forEach((keyMessage, message) -> data.put(key + "." + keyMessage, message));
             } else {
-                Message message = null;
-                if (section.isString(key)) {
-                    message = factory.message(section.getString(key));
-                } else if (section.isList(key)) {
-                    message = factory.message(section.getStringList(key));
-                }
-
-                if (message != null) {
-                    data.put(key, message);
-                }
+                fromSection(section, key).ifPresent(value -> data.put(key, value));
             }
         });
 
         return data;
+    }
+
+    private Optional<Message> fromSection(@NotNull ConfigurationSection section, String key) {
+        Message message = null;
+        if (section.isString(key)) {
+            message = factory.message(section.getString(key));
+        } else if (section.isList(key)) {
+            message = factory.message(section.getStringList(key));
+        }
+        return Optional.ofNullable(message);
     }
 
     @Override
