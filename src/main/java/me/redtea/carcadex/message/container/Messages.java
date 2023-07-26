@@ -7,6 +7,7 @@ import me.redtea.carcadex.message.factory.MessageFactory;
 import me.redtea.carcadex.message.factory.impl.LegacyFactoryImpl;
 import me.redtea.carcadex.message.model.impl.NullMessage;
 import me.redtea.carcadex.message.verifier.MessageVerifier;
+import me.redtea.carcadex.message.verifier.impl.FileMessageVerifier;
 import me.redtea.carcadex.reload.Reloadable;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -164,7 +165,9 @@ public interface Messages extends Reloadable {
     static Messages of(Plugin plugin, String fileName) {
         File file = new File(plugin.getDataFolder(), fileName);
         if(!file.exists()) plugin.saveResource(fileName, false);
-        return of(YamlConfiguration.loadConfiguration(file), new MessageFactoryImpl(plugin));
+        Messages messages = of(YamlConfiguration.loadConfiguration(file), new MessageFactoryImpl(plugin));
+        messages.verifier(new FileMessageVerifier(plugin.getResource(fileName), file));
+        return messages;
     }
 
     /**
@@ -221,7 +224,9 @@ public interface Messages extends Reloadable {
     static Messages legacy(Plugin plugin, String fileName) {
         File file = new File(plugin.getDataFolder(), fileName);
         if(!file.exists()) plugin.saveResource(fileName, false);
-        return new MessagesImpl(file, new LegacyFactoryImpl(plugin));
+        Messages messages = new MessagesImpl(file, new LegacyFactoryImpl(plugin));
+        messages.verifier(new FileMessageVerifier(plugin.getResource(fileName), file));
+        return messages;
     }
 
     /** @see Messages#legacy(ConfigurationSection, Plugin) */

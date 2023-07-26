@@ -30,7 +30,7 @@ public class LegacyFactoryImpl implements MessageFactory {
     @Override
     public Message message(String msg) {
         if(msg == null) return nullMessage();
-        return new LegacyMessage(Lists.newArrayList(msg), plugin);
+        return message(Lists.newArrayList(msg));
     }
 
     @Override

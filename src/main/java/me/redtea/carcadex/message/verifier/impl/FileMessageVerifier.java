@@ -12,14 +12,15 @@ import java.io.InputStreamReader;
 import java.util.Optional;
 
 public class FileMessageVerifier implements MessageVerifier {
-    private ConfigurationSection defaultSection;
+    private final ConfigurationSection defaultSection;
 
     private final FileConfiguration toSaveSection;
     private final File toSaveFile;
 
-    public FileMessageVerifier(InputStream defaultResource, FileConfiguration toSaveSection, File toSaveFile) {
-        defaultSection = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultResource));
-        this.toSaveSection = toSaveSection;
+    @SneakyThrows
+    public FileMessageVerifier(InputStream defaultResource, File toSaveFile) {
+        defaultSection = YamlConfiguration.loadConfiguration(new InputStreamReader(defaultResource, "UTF-8"));
+        this.toSaveSection = YamlConfiguration.loadConfiguration(toSaveFile);
         this.toSaveFile = toSaveFile;
     }
 

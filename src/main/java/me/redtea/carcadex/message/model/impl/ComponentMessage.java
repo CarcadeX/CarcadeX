@@ -11,13 +11,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class ComponentMessage extends AbstractMessage {
-    private final MiniMessage mm;
-    private Plugin plugin;
+    private static final MiniMessage mm = MiniMessage.builder().build();;
+    private final Plugin plugin;
 
     public ComponentMessage(List<String> unparsed, Plugin plugin) {
         super(unparsed, plugin);
         this.plugin = plugin;
-        mm = MiniMessage.builder().build();
     }
 
     @Override
