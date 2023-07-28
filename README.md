@@ -6,3 +6,24 @@ Supporting
 ---------------
 <p>Paper 1.16.x or higher (not tested but may be it will be works 1.12+)</p>
 <p>Java 8 or higher</p>
+
+Starting use
+---------------
+**Gradle:**
+```kotlin
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation("io.github.iredtea:carcadex:1.1.5") //or add it to plugin.yml: libraries and set compileOnly
+}
+```
+**Maven:**
+```xml
+<dependency>
+    <groupId>io.github.iredtea</groupId>
+    <artifactId>carcadex</artifactId>
+    <version>1.1.5</version>
+</dependency>
+```
