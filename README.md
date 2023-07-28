@@ -1,6 +1,7 @@
 # CarcadeX
 Powerful library for bukkit development and other...
-<img src="http://cdn.cnn.com/cnnnext/dam/assets/170510152616-tea-cup-super-tease.jpg">
+<br>
+<img src="https://avatars.mds.yandex.net/i?id=8458a3c4d58a218117793a333b1500207758024b_l-9065769-images-thumbs&n=13">
 
 Messages
 ---------------
