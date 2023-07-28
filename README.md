@@ -1,7 +1,6 @@
 # CarcadeX
-Powerful library for bukkit development and other...
-<br>
-<img src="https://avatars.mds.yandex.net/i?id=8458a3c4d58a218117793a333b1500207758024b_l-9065769-images-thumbs&n=13">
+Powerful library for bukkit development and other...<br><br>
+<img src="https://avatars.mds.yandex.net/i?id=8458a3c4d58a218117793a333b1500207758024b_l-9065769-images-thumbs&n=13"></img>
 
 Messages
 ---------------
