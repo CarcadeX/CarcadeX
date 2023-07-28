@@ -12,6 +12,11 @@ public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
 
     protected final SchemaStrategy<K, V> schemaStrategy;
 
+    public SchemaRepo(SchemaStrategy<K, V> schemaStrategy, Map<K, V> defaults) {
+        super(defaults);
+        this.schemaStrategy = schemaStrategy;
+    }
+
     public SchemaRepo(SchemaStrategy<K, V> schemaStrategy) {
         this.schemaStrategy = schemaStrategy;
     }

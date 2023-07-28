@@ -17,7 +17,16 @@ import java.util.Optional;
  * @param <V> value
  */
 public abstract class MapRepo<K, V> extends ParameterizedReloadable implements Repo<K, V> {
-    protected Map<K, V> data = new HashMap<>();
+    protected Map<K, V> data;
+
+    public MapRepo() {
+        this(new HashMap<>());
+    }
+
+    public MapRepo(Map<K, V> defaults) {
+        data = defaults;
+    }
+
 
     @Override
     public Collection<V> all() {

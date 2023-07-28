@@ -21,7 +21,8 @@ public interface RepoBuilder<K, V> {
     RepoBuilder<K, V> debugLogging();
     RepoBuilder<K, V> logging(Logger logger);
     RepoBuilder<K, V> debugLogging(Logger logger);
-    RepoBuilder<K, V> threadSafe();
+    RepoBuilder<K, V> sync();
+    RepoBuilder<K, V> concurrent();
     MutableRepo<K, V> build();
 
     static<K, V> RepoBuilder<K, V> get() {

@@ -165,7 +165,7 @@ public interface Messages extends Reloadable {
      * @param plugin - plugin that creates a container
      * @return container with messages
      */
-    static Messages of(Plugin plugin, String fileName) {
+    static Messages of(String fileName, Plugin plugin) {
         File file = new File(plugin.getDataFolder(), fileName);
         if(!file.exists()) plugin.saveResource(fileName, false);
         Messages messages = of(YamlConfiguration.loadConfiguration(file), new MessageFactoryImpl(plugin));
@@ -186,7 +186,7 @@ public interface Messages extends Reloadable {
      * @return container with messages
      */
     static Messages of(Plugin plugin) {
-        return of(plugin, "messages.yml");
+        return of("messages.yml", plugin);
     }
 
     /**
@@ -224,7 +224,7 @@ public interface Messages extends Reloadable {
     }
 
     /** @see Messages#legacy(ConfigurationSection, Plugin) */
-    static Messages legacy(Plugin plugin, String fileName) {
+    static Messages legacy(String fileName, Plugin plugin) {
         File file = new File(plugin.getDataFolder(), fileName);
         if(!file.exists()) plugin.saveResource(fileName, false);
         Messages messages = new MessagesImpl(file, new LegacyFactoryImpl(plugin));
@@ -234,7 +234,7 @@ public interface Messages extends Reloadable {
 
     /** @see Messages#legacy(ConfigurationSection, Plugin) */
     static Messages legacy(Plugin plugin) {
-        return legacy(plugin, "messages.yml");
+        return legacy("messages.yml", plugin);
     }
 
     /** @see Messages#legacy(ConfigurationSection, Plugin) */

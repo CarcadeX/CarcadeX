@@ -16,6 +16,9 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
     private CommonSerializer<V> serializer; //null if binary
@@ -28,7 +31,8 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
     private Logger logger = null;
     private boolean logging = false;
     private boolean debugLogger = false;
-    private boolean threadSafe = false;
+    private boolean sync = false;
+    private boolean concurrent = false;
 
     @Override
     public RepoBuilder<K, V> serializer(CommonSerializer<V> serializer) {
@@ -104,8 +108,14 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
     }
 
    @Override
-    public RepoBuilder<K, V> threadSafe() {
-        threadSafe = true;
+    public RepoBuilder<K, V> sync() {
+        sync = true;
+        return this;
+    }
+
+    @Override
+    public RepoBuilder<K, V> concurrent() {
+        concurrent = true;
         return this;
     }
 
@@ -115,18 +125,20 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
             checkDir();
         }
 
+        Map<K, V> defaultMap = concurrent ? new ConcurrentHashMap<>() : new HashMap<>();
+
         CacheRepo<K, V> result = null;
 
         if(serializer != null) {
-            result = new CommonRepo<>(dir, serializer);
+            result = new CommonRepo<>(dir, serializer, defaultMap);
         }
 
         if(schemaStrategy != null) {
-            result = new SchemaRepo<>(schemaStrategy);
+            result = new SchemaRepo<>(schemaStrategy, defaultMap);
         }
 
         if(result == null) {
-            result = new CommonRepo<>(dir);
+            result = new CommonRepo<>(dir, defaultMap);
         }
 
         if(autoSave) {result = new AutoSaveDecorator<>(result, 0, period);
@@ -137,7 +149,7 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
             else result = new LoggingDecorator<>(result, debugLogger);
         }
 
-        if(threadSafe) {
+        if(sync) {
             result = new SynchronizedDecorator<>(result);
         }
 

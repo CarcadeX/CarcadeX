@@ -14,7 +14,7 @@ public class NumUtils {
      * @param durationTicks time in ticks that will be parsed (one second = 20 ticks)
      * @return parsed string in format HOURS:MINUTES:SECONDS
      */
-    public static String formatDurationTime(long durationTicks) {
+    public static String formatDurationTicks(long durationTicks) {
         long hours = 0L;
         long minutes = 0L;
         long seconds = durationTicks / 20;

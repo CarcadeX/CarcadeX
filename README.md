@@ -263,11 +263,12 @@ Repo.builder()
           .build();
 ```
 
-<p>You can set repo as threadSafe:</p>
+<p>You can set repo as synchronized or use concurrent Map for cache (do not use it both, choose one):</p>
 
 ```java
 Repo.builder()
-          .threadSafe()
+          .sync()
+          .concurrent()
           .serializer(new PurchaseSerializer())
           .build();
 ```
@@ -368,12 +369,88 @@ For example:
 <h3>UUIDSerializer</h3>
 Serializer of UUID for kotlinx.serialization
 
+
 ```kotlin
 @Serializable
 data class RentalRecord(
     val tag: String,
     @Serializable(with = UUIDSerializer::class)
     val renter: UUID)
+```
+
+Kotlin extensions
+---------------
+<h3>Repo builder</h3>
+
+For class
+
+```kotlin
+@Serializable
+data class Test(val id: Int, val name: String)
+```
+
+```kotlin
+val json = Json { prettyPrint = true }
+    
+val repo = repo<String, Test> {
+    folder = Paths.get("data")
+
+    save {
+        json.encodeToString(it)
+    }
+    
+    load {
+        json.decodeFromString(it)
+    }
+}
+```
+
+Alternate case
+```kotlin
+val json = Json { prettyPrint = true }
+
+val repo = repo<String, Test> {
+    folder = Paths.get("data/test")
+    save = json::encodeToString
+    load = json::decodeFromString
+}
+```
+
+Using plugin
+```kotlin
+val plugin: Plugin = TODO()
+val json = Json { prettyPrint = true }
+
+val repo = repo<String, Test> {
+    this.plugin = plugin
+    folderName = "tests"
+    save = json::encodeToString
+    load = json::decodeFromString
+}
+```
+
+<h3>Messages builder</h3>
+
+```kotlin
+messages {
+    legacy = false //will legacy format be used? not requires, default - false
+    this.plugin = this //your plugin, requires
+    
+    //Chose one:
+    fileName = "messages.yml" //name of messages file, not requires, default - messages.yml
+    file = File("messages") //messages file, not requires, default - File(plugin.dataFolder, fileName)
+    
+    verifier = FileMessageVerifier(...) //messages verifier, not requires, it has default verifier if set plugin and fileName
+}
+```
+
+<h3>Other functions</h3>
+
+```kotlin
+fun CommandSender.send(message: Message) //sends message to player
+fun CommandSender.sendMessage(message: Message) //just allias for send(Message)
+
+fun matchMaterial(material: String): Material //get material from string
 ```
 
 Supporting
@@ -390,7 +467,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.iredtea:carcadex:1.1.4") //or add it to plugin.yml: libraries and set compileOnly
+    implementation("io.github.iredtea:carcadex:1.1.5") //or add it to plugin.yml: libraries and set compileOnly
 }
 ```
 **Maven:**
@@ -398,6 +475,6 @@ dependencies {
 <dependency>
     <groupId>io.github.iredtea</groupId>
     <artifactId>carcadex</artifactId>
-    <version>1.1.4</version>
+    <version>1.1.5</version>
 </dependency>
 ```
