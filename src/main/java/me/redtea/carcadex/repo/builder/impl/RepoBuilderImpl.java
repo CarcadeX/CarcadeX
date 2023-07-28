@@ -1,117 +1,132 @@
 package me.redtea.carcadex.repo.builder.impl;
 
 import me.redtea.carcadex.repo.MutableRepo;
+import me.redtea.carcadex.repo.builder.exception.NotConfiguredException;
 import me.redtea.carcadex.repo.builder.RepoBuilder;
-import me.redtea.carcadex.repo.decorator.impl.AutoSaveDecorator;
-import me.redtea.carcadex.repo.decorator.impl.SynchronizedDecorator;
-import me.redtea.carcadex.repo.decorator.impl.LoggingDecorator;
+import me.redtea.carcadex.repo.decorator.CacheRepoDecorator;
+import me.redtea.carcadex.repo.decorator.impl.*;
 import me.redtea.carcadex.repo.impl.CacheRepo;
-import me.redtea.carcadex.repo.impl.common.CommonRepo;
 import me.redtea.carcadex.repo.impl.schema.SchemaRepo;
 import me.redtea.carcadex.schema.SchemaStrategy;
+import me.redtea.carcadex.schema.file.impl.binary.BinarySchemaStrategy;
+import me.redtea.carcadex.schema.file.impl.serialize.SerializeSchemaStrategy;
 import me.redtea.carcadex.serializer.CommonSerializer;
 import org.bukkit.plugin.Plugin;
 import org.slf4j.Logger;
 
 import java.io.File;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
-    private CommonSerializer<V> serializer; //null if binary
-    private boolean autoSave;
-    private long period;
-    private Plugin plugin;
-    private Path dir;
+public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V>  {
+    private final EmptyMutableDecorator<K, V> rootDecorator = new EmptyMutableDecorator<>();
+    private CacheRepoDecorator<K, V> lastDecorator = rootDecorator;
+
+    /*
+    FOLDER CONFIGURE
+     */
+    protected File folder;
     private String filename;
-    private SchemaStrategy<K, V> schemaStrategy;
-    private Logger logger = null;
-    private boolean logging = false;
-    private boolean debugLogger = false;
-    private boolean sync = false;
-    private boolean concurrent = false;
+
+    @Override
+    public RepoBuilder<K, V> folder(String filename) {
+        if(plugin != null) plugin(plugin);
+        this.filename = filename;
+        return this;
+    }
+
+    private Plugin plugin;
+    @Override
+    public RepoBuilder<K, V> plugin(Plugin plugin) {
+        this.plugin = plugin;
+        if(folder != null) return this;
+        if(filename == null) filename = "carcadex-data-folder";
+        folder(new File(plugin.getDataFolder(), filename));
+        return this;
+    }
+
+    @Override
+    public RepoBuilder<K, V> folder(File folder) {
+        this.folder = folder;
+        return this;
+    }
+
+    /*
+    SCHEMA CONFIGURE
+     */
+
+    private SchemaStrategy<K, V> schema;
 
     @Override
     public RepoBuilder<K, V> serializer(CommonSerializer<V> serializer) {
-        this.serializer = serializer;
+        if(folder == null) throw new NotConfiguredException("Before set serializer you must configure folder!");
+        schema = new SerializeSchemaStrategy<>(folder, serializer);
         return this;
     }
 
     @Override
     public RepoBuilder<K, V> binary() {
-        serializer = null;
-        return this;
-    }
-
-    @Override
-    public RepoBuilder<K, V> plugin(Plugin plugin) {
-        this.plugin = plugin;
-        return this;
-    }
-
-    @Override
-    public RepoBuilder<K, V> autoSave(long period) {
-        autoSave = true;
-        this.period = period;
+        if(folder == null) throw new NotConfiguredException("Before set binary flag you must configure folder!");
+        schema = new BinarySchemaStrategy<>(folder);
         return this;
     }
 
     @Override
     public RepoBuilder<K, V> schema(SchemaStrategy<K, V> schemaStrategy) {
-        this.schemaStrategy = schemaStrategy;
+        schema = schemaStrategy;
         return this;
     }
 
-    @Override
-    public RepoBuilder<K, V> dir(Path path) {
-        this.dir = path;
-        return this;
-    }
-
-    @Override
-    public RepoBuilder<K, V> dir(String filename) {
-        this.filename = filename;
-        return this;
-    }
+    /*
+    DECORATORS
+     */
 
     @Override
     public RepoBuilder<K, V> logging() {
-        logging = true;
-        debugLogger = false;
+        lastDecorator = new LoggingDecorator<>(lastDecorator);
         return this;
     }
 
     @Override
     public RepoBuilder<K, V> debugLogging() {
-        logging = true;
-        debugLogger = true;
+        lastDecorator = new LoggingDecorator<>(lastDecorator, true);
         return this;
     }
 
     @Override
     public RepoBuilder<K, V> logging(Logger logger) {
-        logging = true;
-        debugLogger = false;
-        this.logger = logger;
+        lastDecorator = new LoggingDecorator<>(lastDecorator, logger, false);
         return this;
     }
 
     @Override
     public RepoBuilder<K, V> debugLogging(Logger logger) {
-        logging = true;
-        debugLogger = true;
-        this.logger = logger;
+        lastDecorator = new LoggingDecorator<>(lastDecorator, logger, true);
         return this;
     }
 
-   @Override
-    public RepoBuilder<K, V> sync() {
-        sync = true;
+    @Override
+    public RepoBuilder<K, V> autoSave(long period) {
+        lastDecorator = new AutoSaveDecorator<>(lastDecorator, 0, period);
         return this;
     }
+
+    @Override
+    public RepoBuilder<K, V> sync() {
+        lastDecorator = new SynchronizedDecorator<>(lastDecorator);
+        return this;
+    }
+
+    @Override
+    public RepoBuilder<K, V> cacheCollectionAll() {
+        lastDecorator = new CacheAllDecorator<>(lastDecorator);
+        return this;
+    }
+
+    /*
+    FLAGS
+     */
+    private boolean concurrent = false;
 
     @Override
     public RepoBuilder<K, V> concurrent() {
@@ -119,48 +134,15 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V> {
         return this;
     }
 
+    /*
+    BUILD
+     */
+
     @Override
     public MutableRepo<K, V> build() {
-        if(dir == null) {
-            checkDir();
-        }
-
-        Map<K, V> defaultMap = concurrent ? new ConcurrentHashMap<>() : new HashMap<>();
-
-        CacheRepo<K, V> result = null;
-
-        if(serializer != null) {
-            result = new CommonRepo<>(dir, serializer, defaultMap);
-        }
-
-        if(schemaStrategy != null) {
-            result = new SchemaRepo<>(schemaStrategy, defaultMap);
-        }
-
-        if(result == null) {
-            result = new CommonRepo<>(dir, defaultMap);
-        }
-
-        if(autoSave) {result = new AutoSaveDecorator<>(result, 0, period);
-        }
-
-        if(logging) {
-            if(logger != null) result = new LoggingDecorator<>(result, logger, debugLogger);
-            else result = new LoggingDecorator<>(result, debugLogger);
-        }
-
-        if(sync) {
-            result = new SynchronizedDecorator<>(result);
-        }
-
-        return result;
-    }
-
-    private void checkDir() {
-        if(plugin == null) {
-            if(filename == null) {
-                dir = Paths.get("saved-data-carcadex");
-            } else dir = Paths.get(filename);
-        } else dir = new File(plugin.getDataFolder(), filename).toPath();
+        if(schema == null) throw new NotConfiguredException("You must set schema!");
+        CacheRepo<K, V> result = new SchemaRepo<>(schema, concurrent ? new ConcurrentHashMap<>() : new HashMap<>());
+        rootDecorator.setRepo(result);
+        return rootDecorator;
     }
 }

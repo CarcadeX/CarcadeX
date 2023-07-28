@@ -1,12 +1,22 @@
 package me.redtea.carcadex;
 
-import me.redtea.carcadex.chathandler.ChatAction;
-import me.redtea.carcadex.chathandler.ChatHandler;
-import me.redtea.carcadex.utils.RunnableX;
-import org.bukkit.entity.Player;
+import lombok.Data;
+
+import java.util.List;
 
 public final class CarcadeX {
-    void a() {}
+
+    @Data
+    class User {
+        private final String name;
+        private final int age;
+        private final float balance;
+        private final List<String> friends;
+    }
+    void a() {
+    }
+
+
     /*
     void a() {
         Repo.<String, String> builder();

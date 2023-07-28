@@ -1,16 +1,18 @@
 package me.redtea.carcadex.repo.decorator;
 
 import me.redtea.carcadex.repo.impl.CacheRepo;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Optional;
+import java.util.function.Predicate;
 
-@RequiredArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class CacheRepoDecorator<K, V> implements CacheRepo<K, V> {
-    protected final CacheRepo<K, V> repo;
+    protected CacheRepo<K, V> repo;
+
+    protected CacheRepoDecorator(CacheRepo<K, V> repo) {
+        this.repo = repo;
+    }
 
     @Override
     public void init() {
@@ -55,5 +57,15 @@ public abstract class CacheRepoDecorator<K, V> implements CacheRepo<K, V> {
     @Override
     public void removeFromCache(K k) {
         repo.remove(k);
+    }
+
+    @Override
+    public Collection<V> find(Predicate<V> predicate) {
+        return repo.find(predicate);
+    }
+
+    @Override
+    public Optional<V> findAny(Predicate<V> predicate) {
+        return repo.findAny(predicate);
     }
 }

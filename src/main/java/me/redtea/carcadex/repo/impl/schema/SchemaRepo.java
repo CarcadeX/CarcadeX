@@ -1,11 +1,15 @@
 package me.redtea.carcadex.repo.impl.schema;
 
+import com.google.common.collect.ImmutableList;
 import me.redtea.carcadex.repo.impl.CacheRepo;
 import me.redtea.carcadex.repo.impl.map.MapRepo;
 import me.redtea.carcadex.schema.SchemaStrategy;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.exposed.sql.Op;
 
 import java.util.*;
+import java.util.function.Predicate;
 
 public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
     protected final Set<K> toRemove = new HashSet<>();
@@ -28,7 +32,8 @@ public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
 
     @Override
     public Collection<V> all() {
-        return schemaStrategy.all();
+        saveAll();
+        return Collections.unmodifiableCollection(schemaStrategy.all());
     }
 
     @Override
@@ -51,8 +56,20 @@ public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
 
     @Override
     public void saveAll() {
-        toRemove.forEach(schemaStrategy::remove);
-        data.forEach(schemaStrategy::insert);
+        toRemove.parallelStream().forEach(schemaStrategy::remove);
+        data.entrySet().parallelStream().forEach((e) -> schemaStrategy.insert(e.getKey(), e.getValue()));
+    }
+
+    @Override
+    public Collection<V> find(Predicate<V> predicate) {
+        return schemaStrategy.find(predicate);
+    }
+
+    @Override
+    public Optional<V> findAny(Predicate<V> predicate) {
+        Optional<V> candidate = data.values().parallelStream().filter(predicate).findAny();
+        if(candidate.isPresent()) return candidate;
+        return schemaStrategy.findAny(predicate);
     }
 
     @Override

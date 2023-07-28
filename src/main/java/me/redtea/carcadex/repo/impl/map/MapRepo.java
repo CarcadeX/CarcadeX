@@ -9,6 +9,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Reload container:
@@ -46,5 +48,15 @@ public abstract class MapRepo<K, V> extends ParameterizedReloadable implements R
     @Override
     public void close() {
         data.clear();
+    }
+
+    @Override
+    public Collection<V> find(Predicate<V> predicate) {
+        return all().parallelStream().filter(predicate).collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<V> findAny(Predicate<V> predicate) {
+        return all().parallelStream().filter(predicate).findAny();
     }
 }
