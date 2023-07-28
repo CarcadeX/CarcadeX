@@ -2,8 +2,10 @@ package me.redtea.carcadex.repo;
 
 import me.redtea.carcadex.reload.Reloadable;
 import me.redtea.carcadex.repo.builder.RepoBuilder;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -38,5 +40,13 @@ public interface Repo<K, V> extends Reloadable {
      */
     static<K, V> RepoBuilder<K, V> builder() {
         return RepoBuilder.get();
+    }
+
+    static<K, V> RepoBuilder<K, V> builder(Plugin plugin, String foldername) {
+        return RepoBuilder.<K, V>of(plugin).folder(foldername);
+    }
+
+    static<K, V> RepoBuilder<K, V> builder(File file) {
+        return RepoBuilder.of(file);
     }
 }
