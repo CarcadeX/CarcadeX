@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    implementation("io.github.iredtea:carcadex:1.2.0") //or add it to plugin.yml: libraries and set compileOnly
+    implementation("io.github.iredtea:carcadex:1.2.1") //or add it to plugin.yml: libraries and set compileOnly
 }
 ```
 **Maven:**
@@ -24,6 +24,6 @@ dependencies {
 <dependency>
     <groupId>io.github.iredtea</groupId>
     <artifactId>carcadex</artifactId>
-    <version>1.2.0</version>
+    <version>1.2.1</version>
 </dependency>
 ```
