@@ -1,8 +1,8 @@
 package me.redtea.carcadex.repo.builder.impl;
 
 import me.redtea.carcadex.repo.MutableRepo;
-import me.redtea.carcadex.repo.builder.exception.NotConfiguredException;
 import me.redtea.carcadex.repo.builder.RepoBuilder;
+import me.redtea.carcadex.repo.builder.exception.NotConfiguredException;
 import me.redtea.carcadex.repo.decorator.CacheRepoDecorator;
 import me.redtea.carcadex.repo.decorator.impl.*;
 import me.redtea.carcadex.repo.impl.CacheRepo;
@@ -11,11 +11,11 @@ import me.redtea.carcadex.schema.SchemaStrategy;
 import me.redtea.carcadex.schema.file.impl.binary.BinarySchemaStrategy;
 import me.redtea.carcadex.schema.file.impl.serialize.SerializeSchemaStrategy;
 import me.redtea.carcadex.serializer.CommonSerializer;
-import org.bukkit.plugin.Plugin;
 import org.slf4j.Logger;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V>  {
@@ -26,24 +26,6 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V>  {
     FOLDER CONFIGURE
      */
     protected File folder;
-    private String filename;
-
-    @Override
-    public RepoBuilder<K, V> folder(String filename) {
-        if(plugin != null) plugin(plugin);
-        this.filename = filename;
-        return this;
-    }
-
-    private Plugin plugin;
-    @Override
-    public RepoBuilder<K, V> plugin(Plugin plugin) {
-        this.plugin = plugin;
-        if(folder != null) return this;
-        if(filename == null) filename = "carcadex-data-folder";
-        folder(new File(plugin.getDataFolder(), filename));
-        return this;
-    }
 
     @Override
     public RepoBuilder<K, V> folder(File folder) {
@@ -123,14 +105,26 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V>  {
         return this;
     }
 
+    @Override
+    public RepoBuilder<K, V> maxCacheSize(int size) {
+        lastDecorator = new FixedCacheSizeDecorator<>(lastDecorator, size);
+        return this;
+    }
+
+    @Override
+    public RepoBuilder<K, V> maxCacheSize(int size, float cleanFactor) {
+        lastDecorator = new FixedCacheSizeDecorator<>(lastDecorator, size, cleanFactor);
+        return this;
+    }
+
     /*
-    FLAGS
+     MAP
      */
-    private boolean concurrent = false;
+    private Map<K, V> defaultMap = new HashMap<>();
 
     @Override
     public RepoBuilder<K, V> concurrent() {
-        concurrent = true;
+        defaultMap = new ConcurrentHashMap<>();
         return this;
     }
 
@@ -141,8 +135,8 @@ public class RepoBuilderImpl<K, V> implements RepoBuilder<K, V>  {
     @Override
     public MutableRepo<K, V> build() {
         if(schema == null) throw new NotConfiguredException("You must set schema!");
-        CacheRepo<K, V> result = new SchemaRepo<>(schema, concurrent ? new ConcurrentHashMap<>() : new HashMap<>());
+        CacheRepo<K, V> result = new SchemaRepo<>(schema, defaultMap);
         rootDecorator.setRepo(result);
-        return rootDecorator;
+        return lastDecorator;
     }
 }

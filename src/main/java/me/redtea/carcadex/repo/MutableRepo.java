@@ -3,10 +3,6 @@ package me.redtea.carcadex.repo;
 import me.redtea.carcadex.reload.Reloadable;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.function.Predicate;
-
 public interface MutableRepo<K, V> extends Repo<K, V>, Reloadable {
 
     /**
@@ -22,6 +18,11 @@ public interface MutableRepo<K, V> extends Repo<K, V>, Reloadable {
      * @return removed object
      */
     V remove(@NotNull K key);
+
+    /**
+     * Removes all objects in Repo
+     */
+    void clear();
 
     /**
      * Saves all cache to storage

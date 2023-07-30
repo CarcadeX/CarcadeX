@@ -68,8 +68,6 @@ dependencies {
     // compileOnly "org.jetbrains.kotlin:kotlin-stdlib-jdk8" //add to libs
     compileOnly 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1' //add to libs
 
-    compileOnly 'org.projectlombok:lombok:1.18.22'
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'
 
     //exposed
     compileOnly("org.jetbrains.exposed:exposed-core:0.40.1")

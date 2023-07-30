@@ -68,4 +68,19 @@ public abstract class CacheRepoDecorator<K, V> implements CacheRepo<K, V> {
     public Optional<V> findAny(Predicate<V> predicate) {
         return repo.findAny(predicate);
     }
+
+    @Override
+    public void clearCache() {
+        repo.clearCache();
+    }
+
+    @Override
+    public void clear() {
+        repo.clear();
+    }
+
+    @Override
+    public int cacheSize() {
+        return repo.cacheSize();
+    }
 }

@@ -59,4 +59,6 @@ public abstract class MapRepo<K, V> extends ParameterizedReloadable implements R
     public Optional<V> findAny(Predicate<V> predicate) {
         return all().parallelStream().filter(predicate).findAny();
     }
+
+
 }

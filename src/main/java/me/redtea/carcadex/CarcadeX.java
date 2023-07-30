@@ -1,8 +1,10 @@
 package me.redtea.carcadex;
 
 import lombok.Data;
+import lombok.var;
+import me.redtea.carcadex.repo.Repos;
 
-import java.util.List;
+import java.io.File;
 
 public final class CarcadeX {
 
@@ -10,10 +12,11 @@ public final class CarcadeX {
     class User {
         private final String name;
         private final int age;
-        private final float balance;
-        private final List<String> friends;
     }
+
     void a() {
+        File file = null;
+        var repo = Repos.<String, User>builder();
     }
 
 

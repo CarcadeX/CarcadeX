@@ -138,5 +138,10 @@ public abstract class AbstractFileSchemaStrategy<K, V> implements SchemaStrategy
         return res;
     }
 
+    @SneakyThrows
+    @Override
+    public void removeAll() {
+        Files.delete(folder);
+    }
 }
 

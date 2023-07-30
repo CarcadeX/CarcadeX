@@ -14,6 +14,7 @@ public interface SchemaStrategy<K, V> extends Reloadable {
     void insert(K key, V value);
 
     void remove(K key);
+    void removeAll();
 
     Collection<V> find(Predicate<V> predicate);
     Optional<V> findAny(Predicate<V> predicate);

@@ -34,4 +34,10 @@ public class CacheAllDecorator<K, V> extends CacheRepoDecorator<K, V> {
         allCache = null;
         return super.remove(key);
     }
+
+    @Override
+    public void clearCache() {
+        allCache = null;
+        super.clearCache();
+    }
 }

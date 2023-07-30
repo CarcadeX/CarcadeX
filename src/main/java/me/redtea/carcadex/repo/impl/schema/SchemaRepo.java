@@ -1,12 +1,9 @@
 package me.redtea.carcadex.repo.impl.schema;
 
-import com.google.common.collect.ImmutableList;
 import me.redtea.carcadex.repo.impl.CacheRepo;
 import me.redtea.carcadex.repo.impl.map.MapRepo;
 import me.redtea.carcadex.schema.SchemaStrategy;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.jetbrains.exposed.sql.Op;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -55,6 +52,12 @@ public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
     }
 
     @Override
+    public void clear() {
+        clearCache();
+        schemaStrategy.removeAll();
+    }
+
+    @Override
     public void saveAll() {
         toRemove.parallelStream().forEach(schemaStrategy::remove);
         data.entrySet().parallelStream().forEach((e) -> schemaStrategy.insert(e.getKey(), e.getValue()));
@@ -83,6 +86,16 @@ public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
     }
 
     @Override
+    public void clearCache() {
+        data.clear();
+    }
+
+    @Override
+    public int cacheSize() {
+        return data.size();
+    }
+
+    @Override
     public void init() {
         schemaStrategy.init();
     }
@@ -102,6 +115,5 @@ public class SchemaRepo<K, V> extends MapRepo<K, V> implements CacheRepo<K, V> {
         schemaStrategy.reload();
         init();
     }
-
 
 }
