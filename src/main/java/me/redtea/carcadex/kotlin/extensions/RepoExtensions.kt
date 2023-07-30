@@ -1,14 +1,13 @@
 package me.redtea.carcadex.kotlin.extensions
 
 import me.redtea.carcadex.repo.MutableRepo
-import me.redtea.carcadex.repo.Repo
+import me.redtea.carcadex.repo.Repos
 import me.redtea.carcadex.repo.builder.RepoBuilder
 import me.redtea.carcadex.repo.builder.exception.NotConfiguredException
 import me.redtea.carcadex.schema.file.impl.serialize.SerializeSchemaStrategy
 import me.redtea.carcadex.serializer.CommonSerializer
 import org.bukkit.plugin.Plugin
 import java.io.File
-
 
 
 inline fun <K, reified V>repo(plugin: Plugin, noinline init: RepoBuilderKt<K, V>.() -> Unit): MutableRepo<K, V>
@@ -19,7 +18,7 @@ fun <K, V>repo(fileName: String, plugin: Plugin, init: RepoBuilderKt<K, V>.() ->
 }
 
 fun <K, V>repo(folder: File, init: RepoBuilderKt<K, V>.() -> Unit): MutableRepo<K, V> {
-    val builder = decorator(Repo.builder<K, V>())
+    val builder = decorator(Repos.builder<K, V>())
     builder.folder(folder)
     builder.init()
     builder.wrapSchema()
@@ -27,7 +26,7 @@ fun <K, V>repo(folder: File, init: RepoBuilderKt<K, V>.() -> Unit): MutableRepo<
 }
 
 fun <K, V>repo(init: RepoBuilderKt<K, V>.() -> Unit): MutableRepo<K, V> {
-    val builder = decorator(Repo.builder<K, V>())
+    val builder = decorator(Repos.builder<K, V>())
     builder.init()
     builder.wrapSchema()
     return builder.build()
