@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 public class GlobalChatHandler implements ChatNotifiable, ChatHandler {
-    private Map<String, List<ChatAction>> registered;
+    private Map<String, List<ChatAction>> registered = new HashMap<>();
     private Plugin plugin = null;
 
     @Override

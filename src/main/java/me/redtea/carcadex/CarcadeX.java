@@ -1,8 +1,6 @@
 package me.redtea.carcadex;
 
 import lombok.Data;
-import lombok.var;
-import me.redtea.carcadex.repo.Repos;
 
 import java.io.File;
 
@@ -14,10 +12,6 @@ public final class CarcadeX {
         private final int age;
     }
 
-    void a() {
-        File file = null;
-        var repo = Repos.<String, User>builder();
-    }
 
 
     /*
