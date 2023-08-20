@@ -1,0 +1,122 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm'
+    id "maven-publish"
+    id "signing"
+}
+
+def moduleName = 'data'
+group = 'me.redtea.carcadex'
+
+repositories {
+    mavenCentral()
+
+    maven {
+        name = "papermc-repo"
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+    }
+}
+
+dependencies {
+    compileOnly('org.projectlombok:lombok:1.18.26')
+    annotationProcessor('org.projectlombok:lombok:1.18.26')
+    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+}
+
+test {
+    useJUnitPlatform()
+}
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'carcadex-' + moduleName
+            groupId = 'io.github.iredtea'
+            version = project.findProperty('version')
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                artifactId = "carcadex-" + moduleName
+                groupId = "io.github.iredtea"
+                version = version
+                name = 'carcadex-' + moduleName
+                description = 'carcadex ' + moduleName
+                url = 'https://github.com/CarcadeX/CarcadeX'
+
+                licenses {
+                    license {
+                        name = "GNU General Public License v3.0"
+                        url = "https://www.gnu.org/licenses/gpl-3.0.en.html"
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'itzRedTea'
+                        name = 'Red Tea'
+                        email = 'red__tea@outlook.com'
+                    }
+                }
+                scm {
+                    connection = "scm:https://github.com/iRedTea/CarcadeX.git"
+                    developerConnection = "git@github.com:iRedTea/CarcadeX.git"
+                    url = 'https://github.com/iRedTea/CarcadeX'
+                }
+            }
+
+        }
+    }
+
+
+
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = "itzRedTea"
+                password = project.findProperty('password')
+            }
+        }
+
+    }
+}
+
+
+
+
+nexusStaging {
+    serverUrl = "https://s01.oss.sonatype.org/service/local/"
+    packageGroup = "io.github.iredtea"
+    username = "itzRedTea"
+    password = project.findProperty('password')
+
+}
+
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.mavenJava
+}
+
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}

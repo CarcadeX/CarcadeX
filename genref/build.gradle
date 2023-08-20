@@ -1,0 +1,140 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm'
+    id "maven-publish"
+    id "signing"
+    id 'com.google.devtools.ksp' version '1.8.21-1.0.11'
+    id 'com.github.johnrengelman.shadow'
+}
+
+def moduleName = 'genref'
+group = 'me.redtea.carcadex'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "spigotmc-repo"
+        url = uri("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
+    }
+    maven {
+        name = "kotlinminecraft"
+        url = "https://raw.githubusercontent.com/KotlinMinecraft/KotlinBukkitAPI-Repository/main"
+    }
+}
+
+dependencies {
+    implementation("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
+    implementation("br.com.devsrsouza.kotlinbukkitapi:architecture:1.0.0-SNAPSHOT")
+    implementation("com.google.devtools.ksp:symbol-processing-api:1.8.21-1.0.11")
+    implementation("com.squareup:kotlinpoet:1.10.1")
+    implementation("com.squareup:kotlinpoet-ksp:1.10.1")
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+kotlin {
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin")
+    }
+    sourceSets.test {
+        kotlin.srcDir("build/generated/ksp/test/kotlin")
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'carcadex-' + moduleName
+            groupId = 'io.github.iredtea'
+            version = project.findProperty('version')
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                artifactId = "carcadex-" + moduleName
+                groupId = "io.github.iredtea"
+                version = version
+                name = 'carcadex-' + moduleName
+                description = 'carcadex ' + moduleName
+                url = 'https://github.com/CarcadeX/CarcadeX'
+
+                licenses {
+                    license {
+                        name = "GNU General Public License v3.0"
+                        url = "https://www.gnu.org/licenses/gpl-3.0.en.html"
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'itzRedTea'
+                        name = 'Red Tea'
+                        email = 'red__tea@outlook.com'
+                    }
+                }
+                scm {
+                    connection = "scm:https://github.com/iRedTea/CarcadeX.git"
+                    developerConnection = "git@github.com:iRedTea/CarcadeX.git"
+                    url = 'https://github.com/iRedTea/CarcadeX'
+                }
+            }
+
+        }
+    }
+
+
+
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = "itzRedTea"
+                password = project.findProperty('password')
+            }
+        }
+
+    }
+}
+
+
+
+
+nexusStaging {
+    serverUrl = "https://s01.oss.sonatype.org/service/local/"
+    packageGroup = "io.github.iredtea"
+    username = "itzRedTea"
+    password = project.findProperty('password')
+
+}
+
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.mavenJava
+}
+
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}

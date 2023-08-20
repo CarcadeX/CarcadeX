@@ -1,0 +1,142 @@
+plugins {
+    id 'java'
+    id "maven-publish"
+    id "signing"
+    id "org.jetbrains.kotlin.jvm"
+}
+
+def moduleName = 'messages'
+group = 'me.redtea'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "papermc-repo"
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+    }
+}
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.9.1')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    compileOnly('org.projectlombok:lombok:1.18.26')
+    annotationProcessor('org.projectlombok:lombok:1.18.26')
+    compileOnly("com.destroystokyo.paper:paper-api:1.16.5-R0.1-SNAPSHOT")
+    compileOnly 'dev.triumphteam:triumph-gui:3.1.2'
+
+    compileOnly 'com.github.cryptomorin:XSeries:9.2.0' //add to libs
+    compileOnly 'org.jetbrains.kotlinx:kotlinx-serialization-json:1.4.1' //add to libs
+
+    implementation "net.kyori:adventure-api:4.14.0"
+    implementation "net.kyori:adventure-platform-bukkit:4.3.0"
+    implementation files(parent.files("messages/libs/MiniMessages.jar")) //using universal minimessages,
+    //that supports 1.16.5
+
+}
+
+test {
+    useJUnitPlatform()
+}
+
+kotlin {
+    sourceSets.main {
+        kotlin.srcDir("build/generated/ksp/main/kotlin")
+    }
+    sourceSets.test {
+        kotlin.srcDir("build/generated/ksp/test/kotlin")
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'carcadex-' + moduleName
+            groupId = 'io.github.iredtea'
+            version = project.findProperty('version')
+            from components.java
+            versionMapping {
+                usage('java-api') {
+                    fromResolutionOf('runtimeClasspath')
+                }
+                usage('java-runtime') {
+                    fromResolutionResult()
+                }
+            }
+            pom {
+                artifactId = "carcadex-" + moduleName
+                groupId = "io.github.iredtea"
+                version = version
+                name = 'carcadex-' + moduleName
+                description = 'carcadex ' + moduleName
+                url = 'https://github.com/CarcadeX/CarcadeX'
+
+                licenses {
+                    license {
+                        name = "GNU General Public License v3.0"
+                        url = "https://www.gnu.org/licenses/gpl-3.0.en.html"
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'itzRedTea'
+                        name = 'Red Tea'
+                        email = 'red__tea@outlook.com'
+                    }
+                }
+                scm {
+                    connection = "scm:https://github.com/iRedTea/CarcadeX.git"
+                    developerConnection = "git@github.com:iRedTea/CarcadeX.git"
+                    url = 'https://github.com/iRedTea/CarcadeX'
+                }
+            }
+
+        }
+    }
+
+
+
+    repositories {
+        maven {
+            def releasesRepoUrl = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            def snapshotsRepoUrl = "https://s01.oss.sonatype.org/content/repositories/snapshots/"
+            url = version.endsWith('SNAPSHOT') ? snapshotsRepoUrl : releasesRepoUrl
+            credentials {
+                username = "itzRedTea"
+                password = project.findProperty('password')
+            }
+        }
+
+    }
+}
+
+
+
+
+nexusStaging {
+    serverUrl = "https://s01.oss.sonatype.org/service/local/"
+    packageGroup = "io.github.iredtea"
+    username = "itzRedTea"
+    password = project.findProperty('password')
+
+}
+
+
+signing {
+    useGpgCmd()
+    sign publishing.publications.mavenJava
+}
+
+
+javadoc {
+    if(JavaVersion.current().isJava9Compatible()) {
+        options.addBooleanOption('html5', true)
+    }
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
