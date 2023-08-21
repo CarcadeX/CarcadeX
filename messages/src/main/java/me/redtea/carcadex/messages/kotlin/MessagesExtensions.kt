@@ -27,3 +27,6 @@ class MessagesBuilder(var legacy: Boolean = false,
         } else return (if(legacy) Messages.legacy(file!!, plugin!!) else Messages.of(file!!, plugin!!)).also { m -> verifier?.let { m.verifier(it) } }
     }
 }
+
+fun Plugin.loadMessages(): Messages = Messages.of(this)
+fun Plugin.loadMessages(filename: String): Messages = Messages.of(filename, this)
